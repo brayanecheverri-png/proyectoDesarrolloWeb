@@ -1,0 +1,59 @@
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    vertical-align: middle;
+}
+
+.font-public-sans {
+    font-family: 'Public Sans', sans-serif;
+}
+
+/* Toast notification */
+#toast {
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#toast.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+}
+
+/* Table row hover */
+.table-row-hover:hover {
+    background-color: #f3f3f3;
+}
+
+/* Modal backdrop */
+#modal-backdrop {
+    backdrop-filter: blur(4px);
+}
+
+/* Spinner */
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Input focus ring override */
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #88d982;
+}
+
+/* Sidebar active */
+.sidebar-active {
+    background-color: white;
+    color: #0d631b;
+    font-weight: 700;
+    border-radius: 0.5rem 0 0 0.5rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}

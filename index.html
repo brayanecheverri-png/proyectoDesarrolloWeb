@@ -1,11 +1,200 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="light" lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Observatorio Laboral | Conectando Talento y Oportunidad</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="styles.css"/>
+    <script src="script.js"></script>
 </head>
-<body>
-    iniciacion del proyecto
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+
+    <!-- Barra de Navegación Superior -->
+    <header class="sticky top-0 z-50 glass-nav border-b border-surface-container">
+        <nav class="flex justify-between items-center w-full px-12 h-16 max-w-none">
+            <div class="text-xl font-bold tracking-tighter text-green-800">
+                Observatorio Laboral
+            </div>
+            <div class="hidden md:flex items-center space-x-8 font-public-sans text-sm tracking-tight">
+                <a class="text-green-700 font-semibold border-b-2 border-green-700 pb-1" href="index.html">Inicio</a>
+                <a class="text-slate-600 hover:text-green-600 transition-colors" href="oferta/">Ofertas de Empleo</a>
+                <a class="text-slate-600 hover:text-green-600 transition-colors" href="#">Empresas</a>
+                <a class="text-slate-600 hover:text-green-600 transition-colors" href="#">Egresados</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="material-symbols-outlined text-slate-600 hover:bg-slate-100 p-2 rounded-full transition-all duration-200">account_circle</button>
+                <button class="material-symbols-outlined text-slate-600 hover:bg-slate-100 p-2 rounded-full transition-all duration-200">logout</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="flex flex-1">
+
+        <!-- Navegación Lateral -->
+        <aside class="fixed left-0 top-16 bottom-0 w-64 flex flex-col py-6 bg-slate-100 border-r border-slate-200 z-40 overflow-y-auto">
+            <div class="px-6 mb-8">
+                <h2 class="text-xs uppercase tracking-widest text-slate-500 font-bold">Gestión</h2>
+                <p class="text-[10px] text-slate-400">Portal del Observatorio</p>
+            </div>
+            <nav class="flex flex-col space-y-1 pl-4">
+                <a class="flex items-center space-x-3 py-3 px-4 text-slate-500 hover:bg-slate-200 hover:pl-6 transition-all duration-300 rounded-l-lg group" href="oferta/registrar.php">
+                    <span class="material-symbols-outlined text-xl">post_add</span>
+                    <span class="font-medium text-sm">Registrar Oferta</span>
+                </a>
+                <a class="flex items-center space-x-3 py-3 px-4 text-slate-500 hover:bg-slate-200 hover:pl-6 transition-all duration-300 rounded-l-lg group" href="#">
+                    <span class="material-symbols-outlined text-xl">school</span>
+                    <span class="font-medium text-sm">Registrar Egresado</span>
+                </a>
+                <a class="flex items-center space-x-3 py-3 px-4 text-slate-500 hover:bg-slate-200 hover:pl-6 transition-all duration-300 rounded-l-lg group" href="#">
+                    <span class="material-symbols-outlined text-xl">domain</span>
+                    <span class="font-medium text-sm">Registrar Empresa</span>
+                </a>
+                <a class="flex items-center space-x-3 py-3 px-4 text-slate-500 hover:bg-slate-200 hover:pl-6 transition-all duration-300 rounded-l-lg group" href="#">
+                    <span class="material-symbols-outlined text-xl">description</span>
+                    <span class="font-medium text-sm">Ver Postulaciones</span>
+                </a>
+                <a class="flex items-center space-x-3 py-3 px-4 text-slate-500 hover:bg-slate-200 hover:pl-6 transition-all duration-300 rounded-l-lg group border-r-4 border-transparent" href="#">
+                    <span class="material-symbols-outlined text-xl">analytics</span>
+                    <span class="font-medium text-sm">Reportes</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="ml-64 flex-1 overflow-x-hidden">
+
+            <!-- Sección Hero -->
+            <section class="relative h-[600px] flex items-center px-16 overflow-hidden bg-surface">
+                <div class="relative z-10 max-w-2xl">
+                    <span class="inline-block px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold tracking-[0.1em] uppercase rounded-full mb-6">Conectando Talento con el Futuro</span>
+                    <h1 class="text-6xl font-extrabold tracking-tighter text-on-surface leading-tight mb-6">
+                        Cerrando la Brecha en la <span class="text-primary italic">Fuerza Laboral Global.</span>
+                    </h1>
+                    <p class="text-lg text-on-surface-variant font-light leading-relaxed mb-10 max-w-lg">
+                        El Observatorio Laboral es un ecosistema sofisticado diseñado para alinear la demanda corporativa con las habilidades en evolución de nuestra fuerza laboral. Cubrimos información basada en datos para fomentar conexiones profesionales significativas.
+                    </p>
+                    <div class="flex items-center space-x-6">
+                        <button class="bg-primary text-on-primary px-8 py-4 rounded-md font-semibold text-sm hover:bg-primary-container transition-all shadow-sm active:scale-95 duration-150">
+                            Explorar Oportunidades
+                        </button>
+                        <button class="text-primary font-semibold text-sm border-b border-transparent hover:border-primary transition-all duration-200">
+                            Asóciate con nosotros →
+                        </button>
+                    </div>
+                </div>
+                <div class="absolute right-0 top-0 w-1/2 h-full">
+                    <div class="absolute inset-0 bg-gradient-to-l from-transparent to-surface z-10"></div>
+                    <img class="w-full h-full object-cover grayscale opacity-40 mix-blend-multiply"
+                         alt="Entorno de oficina profesional moderno con ventanas del piso al techo con vista a una ciudad durante la hora dorada"
+                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4pzf0o_IxaqPL6PXnzJStZVRZc_kMzkyBwJENKxZjg3mqmaz6DufICsWbe7BLz26Qd56CdfbJ2UlpelSd77JpJ8cGrPMDTIws-oQPXFFBKvNDyAyV_OHwhHEdmUXh_vKW7Xv_QZ-6heA3CHhDXW8E4X8HxYf8syeMv2yd1R00b89iXM3ywImM-OORVBLiMue4GaA-tvrED7pqseAV3qKdYUZph43MPCtBaVaXcqoYw68fAeGkGFNwiGaeovRhYnPEXPHxlk5zB80"/>
+                </div>
+            </section>
+
+            <!-- Cuadrícula Analítica / Bento -->
+            <section class="px-16 py-24 bg-surface-container">
+                <div class="grid grid-cols-12 gap-8">
+
+                    <!-- El Monolito -->
+                    <div class="col-span-12 lg:col-span-8 p-12 bg-surface-container-lowest flex flex-col justify-between min-h-[400px]">
+                        <div>
+                            <span class="label-md font-bold tracking-widest text-slate-400 mb-4 block">TENDENCIAS EN VIVO 2024</span>
+                            <h2 class="text-4xl font-bold tracking-tight mb-6 text-on-surface">El Estado del Empleo Moderno</h2>
+                            <p class="text-on-surface-variant max-w-xl leading-relaxed">
+                                Nuestro observatorio proporciona mapeo en tiempo real de los sectores laborales emergentes. Al integrar los resultados académicos con las necesidades del mercado, garantizamos que cada egresado encuentre una trayectoria que se adapte a su potencial único.
+                            </p>
+                        </div>
+                        <div class="flex items-end justify-between mt-12">
+                            <div class="space-y-1">
+                                <div class="text-5xl font-black text-primary">3.450+</div>
+                                <div class="text-xs uppercase font-bold text-slate-500 tracking-wider">Vacantes Activas</div>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="text-5xl font-black text-primary">89%</div>
+                                <div class="text-xs uppercase font-bold text-slate-500 tracking-wider">Tasa de Inserción</div>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="text-5xl font-black text-primary">120</div>
+                                <div class="text-xs uppercase font-bold text-slate-500 tracking-wider">Empresas Aliadas</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tarjetas Asimétricas Laterales -->
+                    <div class="col-span-12 lg:col-span-4 flex flex-col gap-8">
+                        <div class="bg-primary text-on-primary p-8 flex flex-col justify-between flex-1">
+                            <span class="material-symbols-outlined text-3xl mb-4">school</span>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Para Egresados</h3>
+                                <p class="text-on-primary-container text-sm leading-relaxed mb-4">Accede a oportunidades de empleo adaptadas a tu perfil académico.</p>
+                                <a class="text-xs font-black uppercase tracking-widest underline decoration-2" href="#">Crear Perfil</a>
+                            </div>
+                        </div>
+                        <div class="bg-surface-container-lowest p-8 flex flex-col justify-between flex-1 ghost-border">
+                            <span class="material-symbols-outlined text-3xl mb-4 text-primary">domain</span>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2 text-on-surface">Para Empresas</h3>
+                                <p class="text-on-surface-variant text-sm leading-relaxed mb-4">Incorpora los mejores talentos directamente desde la fuente.</p>
+                                <a class="text-xs font-black uppercase tracking-widest text-primary" href="#">Unirse a la Red</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Fila de Empresas Asociadas -->
+            <section class="px-16 py-12 bg-surface">
+                <div class="flex items-center justify-between border-t border-slate-200 pt-12">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Empresas Aliadas</span>
+                    <div class="flex items-center space-x-12 opacity-40 grayscale">
+                        <img class="h-6" alt="Logo empresa tecnología 1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr8rWisRP53PiNZnhE7DMdGV9R2hs5MlHKBi1nPPp-nDXQNNHGIR5cmYAh0qeiSD4P8AmBrzy6FN8YMlMXonThG3aIYtb7fMY2Fh1Pk2BBQ8vLpe0X5AcpxU46uYqJSi7djlhhCxge5903XaH3yesbgCbAD21M_r_RGTYI_3xhKgf1bCTEhxrB1LcCJhnWFwN7hERqxc-AHxtabtfykg-GxkVzgOB87NwT0DrMlamcBCX9ysNuJd_kTPNEWCV9h0zSAMAXUU8CZv0"/>
+                        <img class="h-6" alt="Logo empresa finanzas 2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBVx8inKniGfRFNpcCFajkVexjdsC7uBbOr5lPUbUpf0WBDWMEyMn_BpapCHzVmnMpfAd2CvNf203T8K4J-bj2vLvE95y35iUCeifdyQ32GYq2hXyWC3s-_OtPvWsMKYcmUhhh7-KyOrHG7yG_XWUfmDksSvADNGFITDbNHZtnJNv-LIZsQjy-Sqy8r-0-BbNCC31Ou7LB20-Y6EsidMIBEITF_PaxW9YPn954fUHamXhocafaaWSH9fVfiQ1oZcz_bsxmtZzojfY"/>
+                        <img class="h-6" alt="Logo empresa diseño 3" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1YCvomNRxU86vixurDNLl4pwT_gBA7T0D1NtSI8nKIZh-iuCOHHkE_Ou2zuzDxS1-QaqNTqqm-XIjX0yxfENIa-leET5S3j9LOySBBDmxOLv3IjyhfePA7kHxyGkyTmgQJYgFCuligV9jH8gh0aCtnxHBG9qRLbp0nqmrPG3JgdNenqGQD9hiTlT2e7DkPdGVp9re-gg2mfq9tBX-hPHw09k_YMafsiMbwIeW34lv2Fa2wwS91EX3BKHtBPGcPvf6AYRVr0v001M"/>
+                        <img class="h-6" alt="Logo empresa logística 4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6rmoXZNgG6Bbd9Hm5cuyOUxXYDDo8klZkV0gFKxgquEEEweSp_zODgGYb-6GGaEV_TMfz97L5f7auZ0AS1g457OeD-hqbzhUdNJ87TEH-Rp-tTxfL7VpBUpn7rl8icAkXsTuyZtCPsoq58gHDqjS7j7RyiSgdPjLqhMy7JSfIFbgIeQaryu3UzMBzol1oweyjE8tMpegIDEXaBVBel_t0qbVRb86rbImSkyWFIcRKI1MeKWgkmjz4KsoewyD_p1Bq9NyLt1ML8h0"/>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pie de Página -->
+            <footer class="w-full px-12 py-12 flex justify-between items-center bg-slate-50 border-t border-slate-200">
+                <div class="text-sm font-black text-slate-800">
+                    Grupo Tridente
+                </div>
+                <div class="text-[10px] uppercase tracking-widest text-slate-400">
+                    © 2024 Observatorio Laboral. Todos los derechos reservados.
+                </div>
+                <div class="flex space-x-6 text-[10px] uppercase tracking-widest font-public-sans text-slate-400">
+                    <a class="hover:text-green-700 transition-colors" href="#">Política de Privacidad</a>
+                    <a class="hover:text-green-700 transition-colors" href="#">Términos de Servicio</a>
+                    <a class="hover:text-green-700 transition-colors" href="#">Soporte de Contacto</a>
+                </div>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- Navegación Móvil (visible solo en pantallas pequeñas) -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg flex justify-around items-center h-16 border-t border-slate-100 z-50">
+        <a class="flex flex-col items-center text-green-700" href="#">
+            <span class="material-symbols-outlined">home</span>
+            <span class="text-[10px] font-bold">Inicio</span>
+        </a>
+        <a class="flex flex-col items-center text-slate-400" href="#">
+            <span class="material-symbols-outlined">work</span>
+            <span class="text-[10px]">Ofertas</span>
+        </a>
+        <a class="flex flex-col items-center text-slate-400" href="#">
+            <span class="material-symbols-outlined">analytics</span>
+            <span class="text-[10px]">Datos</span>
+        </a>
+        <a class="flex flex-col items-center text-slate-400" href="#">
+            <span class="material-symbols-outlined">person</span>
+            <span class="text-[10px]">Perfil</span>
+        </a>
+    </nav>
+
 </body>
 </html>

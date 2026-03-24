@@ -1,0 +1,21 @@
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+body {
+    font-family: 'Public Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.data-monolith-gradient {
+    background: linear-gradient(135deg, #0d631b, #2e7d32);
+}
+
+.glass-nav {
+    backdrop-filter: blur(12px);
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.ghost-border {
+    outline: 1px solid rgba(112, 122, 108, 0.2);
+}

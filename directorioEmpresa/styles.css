@@ -1,0 +1,12 @@
+body { 
+    font-family: 'Public Sans', sans-serif; 
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Ajustes adicionales para inputs si se desea */
+input::placeholder {
+    color: #9ca3af;
+}

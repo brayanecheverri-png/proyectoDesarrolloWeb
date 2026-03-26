@@ -106,7 +106,7 @@
                     <span class="material-symbols-outlined">post_add</span>
                     <span class="font-public-sans text-sm">Registrar Oferta</span>
                 </a>
-                <a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-slate-200 hover:pl-8 transition-all duration-300" href="#">
+                <a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-slate-200 hover:pl-8 transition-all duration-300" href="../egresados/registrar.php">
                     <span class="material-symbols-outlined">school</span>
                     <span class="font-public-sans text-sm">Registrar Egresado</span>
                 </a>

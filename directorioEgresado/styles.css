@@ -1,0 +1,21 @@
+body { 
+    font-family: 'Public Sans', sans-serif; 
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.glass-nav {
+    backdrop-filter: blur(12px);
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Estilos adicionales para mejorar la legibilidad del scroll si es necesario */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-thumb {
+    background: #bfcaba;
+    border-radius: 4px;
+}

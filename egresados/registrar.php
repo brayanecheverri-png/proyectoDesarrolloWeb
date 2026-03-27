@@ -1,175 +1,183 @@
+<?php
+// ============================================================
+//  Formulario Registro Egresado — selects desde bolsa_empleo
+// ============================================================
+require_once '../conexion.php';
+$pdo = conectar();
+
+$ciudades  = $pdo->query("SELECT cod_ciudad, nom_ciudad FROM ciudad ORDER BY nom_ciudad")->fetchAll();
+$niveles   = $pdo->query("SELECT cod_nivel_educativo, nom_nivel_educativo FROM nivel_educativo")->fetchAll();
+$estados_p = $pdo->query("SELECT cod_estado_prof, nom_estado_prof FROM estado_profesional")->fetchAll();
+$discapac  = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM discapacidad")->fetchAll();
+
+$success = isset($_GET['success']);
+$error   = $_GET['error'] ?? '';
+$errMsg  = [
+    'campos_requeridos' => 'Por favor complete todos los campos obligatorios.',
+    'email_invalido'    => 'El correo electrónico no es válido.',
+    'ya_registrado'     => 'Ya existe un egresado con ese número de identificación.',
+    'usuario_existente' => 'El nombre de usuario ya está en uso.',
+    'bd'                => 'Error de base de datos: ' . htmlspecialchars($_GET['msg'] ?? ''),
+];
+?>
 <!DOCTYPE html>
 <html class="light" lang="es">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Observatorio Laboral - Registrar Egresado</title>
-    
+    <title>Registrar Egresado - Observatorio Laboral</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    
-    <link rel="stylesheet" href="style.css">
-    <script src="config.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-background text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<body class="bg-slate-50 text-slate-800 min-h-screen">
 
-<nav class="fixed top-0 z-50 flex justify-between items-center w-full px-12 h-16 bg-slate-50 dark:bg-slate-900 font-public-sans text-sm tracking-tight">
-    <div class="flex items-center gap-8">
-        <span class="text-xl font-bold tracking-tighter text-green-800 dark:text-green-500">Observatorio Laboral</span>
-        <div class="hidden md:flex gap-6">
-            <a class="text-slate-600 dark:text-slate-400 hover:text-green-600 transition-colors" href="#">Inicio</a>
-            <a class="text-slate-600 dark:text-slate-400 hover:text-green-600 transition-colors" href="#">Ofertas de empleo</a>
-            <a class="text-slate-600 dark:text-slate-400 hover:text-green-600 transition-colors" href="#">Empresas</a>
-            <a class="text-slate-600 dark:text-slate-400 hover:text-green-600 transition-colors" href="#">Egresados</a>
-        </div>
-    </div>
-    <div class="flex items-center gap-4">
-        <button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all rounded-full"><span class="material-symbols-outlined">account_circle</span></button>
-        <button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all rounded-full"><span class="material-symbols-outlined">logout</span></button>
+<nav class="fixed top-0 z-50 flex justify-between items-center w-full px-12 h-16 bg-white border-b border-slate-200 text-sm">
+    <div class="text-xl font-bold tracking-tighter text-green-800">Observatorio Laboral</div>
+    <div class="hidden md:flex items-center space-x-8">
+        <a class="text-slate-600 hover:text-green-600 transition-colors" href="../index.html">Inicio</a>
+        <a class="text-slate-600 hover:text-green-600 transition-colors" href="../directorioOfertas/directorio.php">Ofertas</a>
+        <a class="text-slate-600 hover:text-green-600 transition-colors" href="../directorioEmpresa/directorio.php">Empresas</a>
+        <a class="text-slate-600 hover:text-green-600 transition-colors" href="../directorioEgresado/directorio.php">Egresados</a>
     </div>
 </nav>
 
-<aside class="fixed left-0 top-16 bottom-0 flex flex-col py-6 h-screen w-64 border-r border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-950 font-public-sans text-sm font-medium">
+<aside class="fixed left-0 top-16 bottom-0 flex flex-col py-6 w-64 border-r border-slate-200 bg-slate-100 text-sm font-medium z-40">
     <div class="px-6 mb-8">
-        <h2 class="text-on-surface font-bold text-lg">Gestión</h2>
+        <h2 class="font-bold text-lg">Gestión</h2>
         <p class="text-slate-500 text-xs">Portal del Observatorio</p>
     </div>
-    <nav class="flex-1 space-y-1">
-        <a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-slate-200 transition-all" href="../oferta/registrar.php"><span class="material-symbols-outlined">post_add</span><span>Registrar oferta</span></a>
-        <a class="flex items-center gap-3 px-6 py-3 text-green-700 bg-white dark:bg-slate-900 rounded-l-lg shadow-sm font-bold" href="registrar.php"><span class="material-symbols-outlined">school</span><span>Registrar egresado</span></a>
-        <a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-slate-200 transition-all" href="../empresas/registrar.php"><span class="material-symbols-outlined">domain</span><span>Registrar empresa</span></a>
-        <a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-slate-200 transition-all" href="../postulaciones/ver.php"><span class="material-symbols-outlined">description</span><span>Ver postulaciones</span></a>
-        <a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-slate-200 transition-all" href="../reportes/ver.php"><span class="material-symbols-outlined">analytics</span><span>Reportes</span></a>
+    <nav class="flex-1 space-y-1 pr-4">
+        <a class="flex items-center px-6 py-3 text-slate-500 hover:bg-slate-200 transition-all" href="../oferta/registrar.php"><span class="material-symbols-outlined mr-3">post_add</span> Registrar Oferta</a>
+        <a class="flex items-center px-6 py-3 text-green-700 bg-white rounded-r-lg shadow-sm font-bold" href="registrar.php"><span class="material-symbols-outlined mr-3">school</span> Registrar Egresado</a>
+        <a class="flex items-center px-6 py-3 text-slate-500 hover:bg-slate-200 transition-all" href="../empresa/registrar.php"><span class="material-symbols-outlined mr-3">domain</span> Registrar Empresa</a>
+        <a class="flex items-center px-6 py-3 text-slate-500 hover:bg-slate-200 transition-all" href="../verOfertaEmpleo/ver.php"><span class="material-symbols-outlined mr-3">description</span> Ver Postulaciones</a>
+        <a class="flex items-center px-6 py-3 text-slate-500 hover:bg-slate-200 transition-all" href="../reportes/reportes.php"><span class="material-symbols-outlined mr-3">analytics</span> Reportes</a>
     </nav>
 </aside>
 
-<main class="ml-64 mt-16 min-h-screen bg-surface p-12">
-    <div class="max-w-4xl mx-auto">
-        <header class="mb-12">
-            <span class="text-label-md uppercase tracking-[0.05rem] text-primary font-semibold mb-2 block">Portal de Registro</span>
-            <h1 class="text-4xl font-extrabold tracking-tight text-on-surface mb-4">Registrar Egresado</h1>
-            <p class="text-on-surface-variant text-lg max-w-2xl leading-relaxed">Amplía la base de datos del observatorio agregando nuevos perfiles de egresados.</p>
+<main class="ml-64 mt-16 min-h-screen p-12">
+    <div class="max-w-3xl mx-auto">
+        <header class="mb-8">
+            <h1 class="text-4xl font-extrabold tracking-tight text-slate-800 mb-2">Registrar Egresado</h1>
+            <p class="text-slate-500">Complete el formulario para agregar un nuevo egresado a la base de datos.</p>
         </header>
 
-        <div class="bg-surface-container-lowest rounded-xl p-10 shadow-none ring-1 ring-outline-variant/20">
+        <?php if ($success): ?>
+        <div class="bg-green-50 border border-green-200 text-green-800 rounded-xl px-6 py-4 mb-6 flex items-center gap-3">
+            <span class="material-symbols-outlined text-green-600">check_circle</span>
+            <span><strong>¡Registro exitoso!</strong> El egresado <strong><?= htmlspecialchars($_GET['nombre'] ?? '') ?></strong> fue guardado correctamente.</span>
+        </div>
+        <?php elseif ($error): ?>
+        <div class="bg-red-50 border border-red-200 text-red-800 rounded-xl px-6 py-4 mb-6 flex items-center gap-3">
+            <span class="material-symbols-outlined text-red-600">error</span>
+            <span><?= $errMsg[$error] ?? 'Ocurrió un error al procesar el formulario.' ?></span>
+        </div>
+        <?php endif; ?>
+
+        <div class="bg-white rounded-xl border border-slate-200 p-10">
             <form action="registro.php" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                
+
                 <div class="col-span-full mb-2">
-                    <h3 class="text-on-primary-fixed-variant font-bold flex items-center gap-2">
-                        <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">person</span> Información Personal
-                    </h3>
-                    <div class="h-px bg-surface-container mt-2"></div>
+                    <h3 class="font-bold text-slate-700 flex items-center gap-2"><span class="material-symbols-outlined text-green-700">person</span> Información Personal</h3>
+                    <div class="h-px bg-slate-100 mt-2"></div>
                 </div>
 
                 <div class="space-y-1.5">
-                    <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Nombre</label>
-                    <input name="nombre" class="w-full ..." type="text" placeholder="Ingrese el nombre" required/>
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Nombre <span class="text-red-500">*</span></label>
+                    <input name="nombre" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none" type="text" placeholder="Ingrese el nombre" required/>
                 </div>
 
                 <div class="space-y-1.5">
-                    <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Apellido</label>
-                    <input name="apellido" class="w-full ..." type="text" placeholder="Ingrese el apellido" required/>
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Apellido <span class="text-red-500">*</span></label>
+                    <input name="apellido" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none" type="text" placeholder="Ingrese el apellido" required/>
                 </div>
 
                 <div class="space-y-1.5">
-                    <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Número de identificación</label>
-                    <input name="id_number" class="w-full ..." type="text" placeholder="Documento de identidad" required/>
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-500">N° de Identificación <span class="text-red-500">*</span></label>
+                    <input name="id_number" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none" type="text" placeholder="Documento de identidad" required/>
                 </div>
 
                 <div class="space-y-1.5">
-                    <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Teléfono</label>
-                    <input name="phone" class="w-full ..." type="tel" placeholder="+57 300 000 0000"/>
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Teléfono</label>
+                    <input name="phone" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none" type="tel" placeholder="+57 300 000 0000"/>
                 </div>
 
                 <div class="col-span-full space-y-1.5">
-                    <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Correo electrónico</label>
-                    <input name="email" class="w-full ..." type="email" placeholder="correo@ejemplo.com" required/>
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Correo Electrónico <span class="text-red-500">*</span></label>
+                    <input name="email" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none" type="email" placeholder="correo@ejemplo.com" required/>
                 </div>
 
-                <div class="col-span-full mt-6 mb-2">
-                    <h3 class="text-on-primary-fixed-variant font-bold flex items-center gap-2">
-                        <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">location_on</span> Ubicación
-                    </h3>
-                    <div class="h-px bg-surface-container mt-2"></div>
+                <div class="col-span-full mt-4 mb-2">
+                    <h3 class="font-bold text-slate-700 flex items-center gap-2"><span class="material-symbols-outlined text-green-700">location_on</span> Ubicación y Perfil</h3>
+                    <div class="h-px bg-slate-100 mt-2"></div>
                 </div>
 
                 <div class="space-y-1.5">
-                    <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">País</label>
-                    <select name="country" class="w-full ...">
-                        <option value="">Seleccionar país</option>
-                        <option value="CO">Colombia</option>
-                        <option value="US">Estados Unidos</option>
-                        <option value="UK">Reino Unido</option>
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Ciudad</label>
+                    <select name="city" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none">
+                        <option value="">Seleccionar ciudad</option>
+                        <?php foreach ($ciudades as $c): ?>
+                        <option value="<?= $c['cod_ciudad'] ?>"><?= htmlspecialchars($c['nom_ciudad']) ?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
 
                 <div class="space-y-1.5">
-                    <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Departamento</label>
-                    <input name="department" class="w-full ..." type="text" placeholder="Departamento"/>
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Nivel Educativo</label>
+                    <select name="nivel_edu" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none">
+                        <option value="">Seleccionar nivel</option>
+                        <?php foreach ($niveles as $n): ?>
+                        <option value="<?= $n['cod_nivel_educativo'] ?>"><?= htmlspecialchars($n['nom_nivel_educativo']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
                 <div class="space-y-1.5">
-                    <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Ciudad</label>
-                    <input name="city" class="w-full ..." type="text" placeholder="Ciudad actual"/>
-                </div>
-
-                <div class="col-span-full mt-6 mb-2">
-                    <h3 class="text-on-primary-fixed-variant font-bold flex items-center gap-2">
-                        <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">lock</span> Credenciales
-                    </h3>
-                    <div class="h-px bg-surface-container mt-2"></div>
-                </div>
-
-                <div class="space-y-1.5">
-                    <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Usuario</label>
-                    <input name="username" class="w-full ..." type="text" placeholder="Elija un usuario" required/>
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Estado Profesional</label>
+                    <select name="estado_prof" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none">
+                        <option value="">Seleccionar estado</option>
+                        <?php foreach ($estados_p as $ep): ?>
+                        <option value="<?= $ep['cod_estado_prof'] ?>"><?= htmlspecialchars($ep['nom_estado_prof']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
                 <div class="space-y-1.5">
-                    <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Contraseña</label>
-                    <input name="password" class="w-full ..." type="password" placeholder="••••••••" required/>
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Discapacidad</label>
+                    <select name="discapacidad" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none">
+                        <option value="">Seleccionar</option>
+                        <?php foreach ($discapac as $d): ?>
+                        <option value="<?= $d['cod_discapacidad'] ?>"><?= htmlspecialchars($d['nom_discapacidad']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
-                <div class="col-span-full mt-10 flex flex-col items-center gap-4">
-                    <button type="submit" class="w-full md:w-1/2 py-4 px-8 bg-primary text-on-primary font-bold rounded-md">
-                        Registrar egresado <span class="material-symbols-outlined">send</span>
+                <div class="col-span-full mt-4 mb-2">
+                    <h3 class="font-bold text-slate-700 flex items-center gap-2"><span class="material-symbols-outlined text-green-700">lock</span> Credenciales de Acceso</h3>
+                    <div class="h-px bg-slate-100 mt-2"></div>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Usuario <span class="text-red-500">*</span></label>
+                    <input name="username" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none" type="text" placeholder="Elija un nombre de usuario" required/>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Contraseña <span class="text-red-500">*</span></label>
+                    <input name="password" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none" type="password" placeholder="••••••••" required/>
+                </div>
+
+                <div class="col-span-full mt-8">
+                    <button type="submit" class="w-full py-4 bg-green-700 text-white font-bold rounded-xl hover:bg-green-800 transition-colors flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">save</span> Guardar Egresado
                     </button>
-                    <p class="text-xs text-on-surface-variant flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[14px]">info</span> Todos los campos son obligatorios.
-                    </p>
+                    <p class="text-center text-xs text-slate-400 mt-3">Los campos marcados con * son obligatorios.</p>
                 </div>
             </form>
         </div>
-
-        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="col-span-2 bg-secondary-container/30 p-8 rounded-xl flex items-center gap-6">
-                <div class="shrink-0 w-16 h-16 bg-white rounded-full flex items-center justify-center text-primary shadow-sm">
-                    <span class="material-symbols-outlined text-3xl">verified_user</span>
-                </div>
-                <div>
-                    <h4 class="font-bold text-on-secondary-container">Verificación segura</h4>
-                    <p class="text-sm text-on-secondary-fixed-variant leading-relaxed">Los perfiles se verifican con registros universitarios.</p>
-                </div>
-            </div>
-            <div class="bg-surface-container-high p-8 rounded-xl flex flex-col justify-center">
-                <h4 class="font-bold text-on-surface text-2xl tracking-tighter">98.4%</h4>
-                <p class="text-xs font-bold uppercase text-on-surface-variant mt-1">Precisión de datos</p>
-            </div>
-        </div>
     </div>
 </main>
-
-<footer class="w-full px-12 flex justify-between items-center bg-slate-50 dark:bg-slate-900 py-8 border-t border-slate-200 mt-auto">
-    <div class="flex items-center gap-4">
-        <span class="text-sm font-black text-slate-800 dark:text-slate-200">Observatorio Laboral</span>
-        <span class="text-slate-400 text-xs">© 2024. Todos los derechos reservados.</span>
-    </div>
-    <div class="flex gap-8 text-xs uppercase tracking-widest">
-        <a class="text-slate-400 hover:text-green-700" href="#">Política de privacidad</a>
-        <a class="text-slate-400 hover:text-green-700" href="#">Términos</a>
-    </div>
-</footer>
-
 </body>
 </html>

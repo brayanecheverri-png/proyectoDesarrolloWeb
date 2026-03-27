@@ -10,7 +10,7 @@
 
 // ---------- Configuración de BD ----------
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'observatorio_laboral');
+define('DB_NAME', 'bolsa_empleo');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_CHARSET', 'utf8mb4');

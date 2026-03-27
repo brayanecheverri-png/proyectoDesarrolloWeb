@@ -17,10 +17,10 @@
 <nav class="bg-slate-50 dark:bg-slate-900 flex justify-between items-center w-full px-12 h-16 max-w-none fixed top-0 z-50">
     <div class="text-xl font-bold tracking-tighter text-green-800 dark:text-green-500">Observatorio Laboral</div>
     <div class="hidden md:flex items-center gap-8 font-public-sans text-sm tracking-tight">
-        <a class="text-slate-600 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-300 transition-colors" href="#">Inicio</a>
-        <a class="text-green-700 dark:text-green-400 font-semibold border-b-2 border-green-700 dark:border-green-400 pb-1" href="#">Ofertas de Empleo</a>
-        <a class="text-slate-600 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-300 transition-colors" href="#">Empresas</a>
-        <a class="text-slate-600 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-300 transition-colors" href="#">Graduados</a>
+        <a class="text-slate-600 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-300 transition-colors" href="../index.html">Inicio</a>
+        <a class="text-green-700 dark:text-green-400 font-semibold border-b-2 border-green-700 dark:border-green-400 pb-1" href="ver.php">Ofertas de Empleo</a>
+        <a class="text-slate-600 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-300 transition-colors" href="../directorioEmpresa/directorio.php">Empresas</a>
+        <a class="text-slate-600 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-300 transition-colors" href="../directorioEgresado/directorio.php">Graduados</a>
     </div>
     <div class="flex items-center gap-4 text-green-700 dark:text-green-400">
         <button class="material-symbols-outlined hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 p-2 rounded-full">account_circle</button>
@@ -34,13 +34,13 @@
         <p class="text-slate-500 text-xs uppercase tracking-widest">Portal del Observatorio</p>
     </div>
     <nav class="flex flex-col gap-1 pr-4 font-public-sans text-sm font-medium">
-        <a class="flex items-center gap-3 px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:pl-8 transition-all duration-300" href="#">
+        <a class="flex items-center gap-3 px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:pl-8 transition-all duration-300" href="../oferta/registrar.php">
             <span class="material-symbols-outlined">post_add</span> Registrar Oferta
         </a>
-        <a class="flex items-center gap-3 px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:pl-8 transition-all duration-300" href="#">
+        <a class="flex items-center gap-3 px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:pl-8 transition-all duration-300" href="../egresados/registrar.php">
             <span class="material-symbols-outlined">school</span> Registrar Graduado
         </a>
-        <a class="flex items-center gap-3 px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:pl-8 transition-all duration-300" href="#">
+        <a class="flex items-center gap-3 px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:pl-8 transition-all duration-300" href="../empresa/registrar.php">
             <span class="material-symbols-outlined">domain</span> Registrar Empresa
         </a>
         <a class="flex items-center gap-3 px-6 py-3 text-green-700 dark:text-green-400 bg-white dark:bg-slate-900 rounded-r-lg shadow-sm font-bold" href="#">

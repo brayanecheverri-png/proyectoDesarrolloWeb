@@ -1,3 +1,10 @@
+<?php
+require_once '../conexion.php';
+$pdo = conectar();
+$ciudades = $pdo->query("SELECT cod_ciudad, nom_ciudad FROM ciudad ORDER BY nom_ciudad")->fetchAll();
+$success = isset($_GET["success"]);
+$error = $_GET["error"] ?? "";
+?>
 <!DOCTYPE html>
 <html class="light" lang="es">
 <head>
@@ -19,10 +26,10 @@
             Observatorio Laboral
         </div>
         <nav class="hidden md:flex items-center space-x-8">
-            <a class="text-stone-600 dark:text-stone-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors duration-200" href="#">Inicio</a>
-            <a class="text-stone-600 dark:text-stone-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors duration-200" href="#">Ofertas de Empleo</a>
+            <a class="text-stone-600 dark:text-stone-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors duration-200" href="../index.html">Inicio</a>
+            <a class="text-stone-600 dark:text-stone-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors duration-200" href="../directorioOfertas/directorio.php">Ofertas de Empleo</a>
             <a class="text-stone-600 dark:text-stone-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors duration-200" href="../directorioEmpresa/directorio.php">Empresas</a>
-            <a class="text-stone-600 dark:text-stone-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors duration-200" href="#">Graduados</a>
+            <a class="text-stone-600 dark:text-stone-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors duration-200" href="../directorioEgresado/directorio.php">Graduados</a>
         </nav>
         <div class="flex items-center space-x-4">
             <button class="p-2 text-green-700 dark:text-green-400 hover:bg-stone-50 dark:hover:bg-stone-800 rounded-full transition-colors duration-200">
@@ -40,23 +47,23 @@
             <p class="text-xs text-stone-500 uppercase tracking-widest mt-1">Suite de Gestión</p>
         </div>
         <nav class="flex flex-col space-y-2">
-            <a class="flex items-center space-x-3 p-3 text-stone-500 dark:text-stone-500 hover:text-green-600 dark:hover:text-green-300 hover:translate-x-1 transition-transform duration-200 rounded-lg" href="#">
+            <a class="flex items-center space-x-3 p-3 text-stone-500 dark:text-stone-500 hover:text-green-600 dark:hover:text-green-300 hover:translate-x-1 transition-transform duration-200 rounded-lg" href="../oferta/registrar.php">
                 <span class="material-symbols-outlined">post_add</span>
                 <span>Registrar Ofertas</span>
             </a>
-            <a class="flex items-center space-x-3 p-3 text-stone-500 dark:text-stone-500 hover:text-green-600 dark:hover:text-green-300 hover:translate-x-1 transition-transform duration-200 rounded-lg" href="#">
+            <a class="flex items-center space-x-3 p-3 text-stone-500 dark:text-stone-500 hover:text-green-600 dark:hover:text-green-300 hover:translate-x-1 transition-transform duration-200 rounded-lg" href="../egresado/registrar.php">
                 <span class="material-symbols-outlined">school</span>
                 <span>Registrar Graduados</span>
             </a>
-            <a class="flex items-center space-x-3 p-3 text-green-700 dark:text-green-400 bg-white dark:bg-stone-900 shadow-sm rounded-lg" href="#">
+            <a class="flex items-center space-x-3 p-3 text-green-700 dark:text-green-400 bg-white dark:bg-stone-900 shadow-sm rounded-lg" href="../empresa/registrar.php">
                 <span class="material-symbols-outlined">domain</span>
                 <span>Registrar Empresas</span>
             </a>
-            <a class="flex items-center space-x-3 py-3 px-4 text-slate-500 hover:bg-slate-200 hover:pl-6 transition-all duration-300 rounded-l-lg group" href="#">
+            <a class="flex items-center space-x-3 py-3 px-4 text-slate-500 hover:bg-slate-200 hover:pl-6 transition-all duration-300 rounded-l-lg group" href="../verPostulaciones/ver.php">
                 <span class="material-symbols-outlined text-xl">description</span>
                 <span class="font-medium text-sm">Ver Postulaciones</span>
             </a>
-            <a class="flex items-center space-x-3 py-3 px-4 text-slate-500 hover:bg-slate-200 hover:pl-6 transition-all duration-300 rounded-l-lg group border-r-4 border-transparent" href="#">
+            <a class="flex items-center space-x-3 py-3 px-4 text-slate-500 hover:bg-slate-200 hover:pl-6 transition-all duration-300 rounded-l-lg group border-r-4 border-transparent" href="../reportes/reportes.php">
                 <span class="material-symbols-outlined text-xl">analytics</span>
                 <span class="font-medium text-sm">Reportes</span>
             </a>
@@ -86,7 +93,7 @@
             </header>
 
             <div class="bg-surface-container-low rounded-xl overflow-hidden">
-                <form action="procesar_registro.php" method="POST" class="p-10 space-y-12">
+                <form action="registro.php" method="POST" class="p-10 space-y-12">
                     <section>
                         <div class="flex items-baseline space-x-4 mb-8">
                             <span class="text-2xl font-bold text-outline-variant">01</span>
@@ -144,7 +151,7 @@
                             </div>
                             <div class="space-y-2">
                                 <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider" for="city">Ciudad</label>
-                                <input name="ciudad" class="w-full h-12 px-4 bg-surface-container-lowest border border-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary-fixed-dim focus:border-transparent transition-all outline-none text-on-surface" id="city" placeholder="ej. Medellín" type="text"/>
+                                <select name="ciudad" id="city" class="w-full h-12 px-4 bg-surface-container-lowest border border-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary-fixed-dim focus:border-transparent transition-all outline-none text-on-surface"><option value="">Seleccionar ciudad</option><?php foreach($ciudades as $c): ?><option value="<?= $c['cod_ciudad'] ?>"><?= htmlspecialchars($c['nom_ciudad']) ?></option><?php endforeach; ?></select>
                             </div>
                         </div>
                         <div class="space-y-2">

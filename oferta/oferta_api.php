@@ -1,16 +1,14 @@
 <?php
 // ============================================================
-//  API CRUD — oferta_trabajo_tl
-//  Archivo: oferta_api.php
+//  API CRUD — oferta_trabajo_of
+//  Archivo: oferta/oferta_api.php
 // ============================================================
 
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 
-// ---------- Incluir configuración de BD ----------
 require_once '../conexion.php';
 
-// ---------- Router ----------
 $accion = $_GET['accion'] ?? ($_POST['accion'] ?? '');
 
 try {
@@ -21,52 +19,69 @@ try {
         // ── LISTAR ──────────────────────────────────────────
         case 'listar':
             $stmt = $pdo->query("
-                SELECT cod_oferta, cargo, perfil, salario,
-                       num_vacante, cod_ciudad, nit_empresa
-                FROM oferta_trabajo_tl
-                ORDER BY cod_oferta DESC
+                SELECT o.cod_oferta, o.nom_puesto_trabajo, o.salario,
+                       o.num_vacantes, o.fecha_publicacion, o.estado,
+                       e.nom_empresa, c.nom_ciudad
+                FROM oferta_trabajo_of o
+                LEFT JOIN empresa_of e ON o.cod_empresa = e.cod_empresa
+                LEFT JOIN ciudad c     ON o.cod_ciudad  = c.cod_ciudad
+                ORDER BY o.cod_oferta DESC
             ");
             responder(true, 'OK', ['ofertas' => $stmt->fetchAll()]);
+            break;
 
         // ── OBTENER UNO ──────────────────────────────────────
         case 'obtener':
             $id = filter_input(INPUT_GET, 'cod_oferta', FILTER_VALIDATE_INT);
             if (!$id) responder(false, 'ID inválido.');
 
-            $stmt = $pdo->prepare("SELECT * FROM oferta_trabajo_tl WHERE cod_oferta = ?");
+            $stmt = $pdo->prepare("
+                SELECT o.*, e.nom_empresa, c.nom_ciudad,
+                       n.nom_nivel_educativo, i.nom_idioma, d.nom_discapacidad
+                FROM oferta_trabajo_of o
+                LEFT JOIN empresa_of e      ON o.cod_empresa = e.cod_empresa
+                LEFT JOIN ciudad c          ON o.cod_ciudad  = c.cod_ciudad
+                LEFT JOIN nivel_educativo n ON o.cod_nivel   = n.cod_nivel_educativo
+                LEFT JOIN idioma i          ON o.cod_idioma  = i.cod_idioma
+                LEFT JOIN discapacidad d    ON o.cod_discapacidad = d.cod_discapacidad
+                WHERE o.cod_oferta = ?
+            ");
             $stmt->execute([$id]);
             $oferta = $stmt->fetch();
-
             if (!$oferta) responder(false, 'Oferta no encontrada.');
             responder(true, 'OK', ['oferta' => $oferta]);
+            break;
 
         // ── CREAR ─────────────────────────────────────────────
         case 'crear':
             $datos = sanitizarPost([
-                'cargo', 'perfil', 'salario', 'requerimientos', 'experiencia',
-                'num_vacante', 'horario', 'duracion', 'nom_software_maneja',
-                'nivel_manejo_software', 'nit_empresa', 'cod_discapacidad',
-                'cod_contrato', 'cod_nivel_edu', 'cod_idioma', 'cod_ciudad', 'cod_titulo'
+                'nom_puesto_trabajo', 'descripcion', 'requisitos', 'salario',
+                'num_vacantes', 'horario', 'duracion', 'experiencia',
+                'cod_empresa', 'cod_discapacidad', 'cod_idioma',
+                'cod_nivel', 'cod_ciudad'
             ]);
 
-            if (empty($datos['cargo']))       responder(false, 'El campo cargo es obligatorio.');
-            if (empty($datos['nit_empresa'])) responder(false, 'El NIT de empresa es obligatorio.');
+            if (empty($datos['nom_puesto_trabajo'])) responder(false, 'El cargo es obligatorio.');
+            if (empty($datos['cod_empresa']))         responder(false, 'La empresa es obligatoria.');
 
-            $sql = "INSERT INTO oferta_trabajo_tl
-                        (cargo, perfil, salario, requerimientos, experiencia,
-                         num_vacante, horario, duracion, nom_software_maneja,
-                         nivel_manejo_software, nit_empresa, cod_discapacidad,
-                         cod_contrato, cod_nivel_edu, cod_idioma, cod_ciudad, cod_titulo)
+            // Generar num_oferta automático
+            $num = 'OF-' . date('Ymd') . '-' . rand(100, 999);
+
+            $sql = "INSERT INTO oferta_trabajo_of
+                        (num_oferta, nom_puesto_trabajo, descripcion, requisitos, salario,
+                         num_vacantes, horario, duracion, experiencia,
+                         cod_empresa, cod_discapacidad, cod_idioma, cod_nivel, cod_ciudad, estado)
                     VALUES
-                        (:cargo, :perfil, :salario, :requerimientos, :experiencia,
-                         :num_vacante, :horario, :duracion, :nom_software_maneja,
-                         :nivel_manejo_software, :nit_empresa, :cod_discapacidad,
-                         :cod_contrato, :cod_nivel_edu, :cod_idioma, :cod_ciudad, :cod_titulo)";
+                        (:num_oferta, :nom_puesto_trabajo, :descripcion, :requisitos, :salario,
+                         :num_vacantes, :horario, :duracion, :experiencia,
+                         :cod_empresa, :cod_discapacidad, :cod_idioma, :cod_nivel, :cod_ciudad, 'AC')";
 
+            $datos['num_oferta'] = $num;
             $stmt = $pdo->prepare($sql);
             $stmt->execute($datos);
 
-            responder(true, 'Oferta registrada correctamente.', ['id' => $pdo->lastInsertId()]);
+            responder(true, 'Oferta registrada correctamente.', ['id' => $pdo->lastInsertId(), 'num_oferta' => $num]);
+            break;
 
         // ── ACTUALIZAR ────────────────────────────────────────
         case 'actualizar':
@@ -74,55 +89,69 @@ try {
             if (!$id) responder(false, 'ID inválido.');
 
             $datos = sanitizarPost([
-                'cargo', 'perfil', 'salario', 'requerimientos', 'experiencia',
-                'num_vacante', 'horario', 'duracion', 'nom_software_maneja',
-                'nivel_manejo_software', 'nit_empresa', 'cod_discapacidad',
-                'cod_contrato', 'cod_nivel_edu', 'cod_idioma', 'cod_ciudad', 'cod_titulo'
+                'nom_puesto_trabajo', 'descripcion', 'requisitos', 'salario',
+                'num_vacantes', 'horario', 'duracion', 'experiencia',
+                'cod_empresa', 'cod_discapacidad', 'cod_idioma', 'cod_nivel', 'cod_ciudad'
             ]);
 
-            if (empty($datos['cargo']))       responder(false, 'El campo cargo es obligatorio.');
-            if (empty($datos['nit_empresa'])) responder(false, 'El NIT de empresa es obligatorio.');
+            if (empty($datos['nom_puesto_trabajo'])) responder(false, 'El cargo es obligatorio.');
 
             $datos['cod_oferta'] = $id;
-
-            $sql = "UPDATE oferta_trabajo_tl SET
-                        cargo                = :cargo,
-                        perfil               = :perfil,
-                        salario              = :salario,
-                        requerimientos       = :requerimientos,
-                        experiencia          = :experiencia,
-                        num_vacante          = :num_vacante,
-                        horario              = :horario,
-                        duracion             = :duracion,
-                        nom_software_maneja  = :nom_software_maneja,
-                        nivel_manejo_software= :nivel_manejo_software,
-                        nit_empresa          = :nit_empresa,
-                        cod_discapacidad     = :cod_discapacidad,
-                        cod_contrato         = :cod_contrato,
-                        cod_nivel_edu        = :cod_nivel_edu,
-                        cod_idioma           = :cod_idioma,
-                        cod_ciudad           = :cod_ciudad,
-                        cod_titulo           = :cod_titulo
+            $sql = "UPDATE oferta_trabajo_of SET
+                        nom_puesto_trabajo = :nom_puesto_trabajo,
+                        descripcion        = :descripcion,
+                        requisitos         = :requisitos,
+                        salario            = :salario,
+                        num_vacantes       = :num_vacantes,
+                        horario            = :horario,
+                        duracion           = :duracion,
+                        experiencia        = :experiencia,
+                        cod_empresa        = :cod_empresa,
+                        cod_discapacidad   = :cod_discapacidad,
+                        cod_idioma         = :cod_idioma,
+                        cod_nivel          = :cod_nivel,
+                        cod_ciudad         = :cod_ciudad
                     WHERE cod_oferta = :cod_oferta";
 
             $stmt = $pdo->prepare($sql);
             $stmt->execute($datos);
-
             responder(true, 'Oferta actualizada correctamente.');
+            break;
+
+        // ── CAMBIAR ESTADO ────────────────────────────────────
+        case 'cambiar_estado':
+            $id     = filter_input(INPUT_POST, 'cod_oferta', FILTER_VALIDATE_INT);
+            $estado = trim($_POST['estado'] ?? '');
+            if (!$id || !in_array($estado, ['AC', 'IN', 'CE'])) responder(false, 'Datos inválidos.');
+
+            $pdo->prepare("UPDATE oferta_trabajo_of SET estado = ? WHERE cod_oferta = ?")
+                ->execute([$estado, $id]);
+            responder(true, 'Estado actualizado.');
+            break;
 
         // ── ELIMINAR ──────────────────────────────────────────
         case 'eliminar':
             $id = filter_input(INPUT_POST, 'cod_oferta', FILTER_VALIDATE_INT);
             if (!$id) responder(false, 'ID inválido.');
 
-            // Eliminar postulaciones relacionadas primero (integridad referencial)
-            $pdo->prepare("DELETE FROM postulaciones_tl WHERE cod_oferta = ?")->execute([$id]);
+            // Eliminar postulaciones relacionadas primero
+            $pdo->prepare("DELETE FROM postulacion WHERE cod_oferta = ?")->execute([$id]);
 
-            $stmt = $pdo->prepare("DELETE FROM oferta_trabajo_tl WHERE cod_oferta = ?");
+            $stmt = $pdo->prepare("DELETE FROM oferta_trabajo_of WHERE cod_oferta = ?");
             $stmt->execute([$id]);
-
-            if ($stmt->rowCount() === 0) responder(false, 'No se encontró la oferta.');
+            if ($stmt->rowCount() === 0) responder(false, 'Oferta no encontrada.');
             responder(true, 'Oferta eliminada correctamente.');
+            break;
+
+        // ── CATÁLOGOS (para llenar selects del formulario) ───
+        case 'catalogos':
+            $empresas  = $pdo->query("SELECT cod_empresa, nom_empresa FROM empresa_of ORDER BY nom_empresa")->fetchAll();
+            $ciudades  = $pdo->query("SELECT cod_ciudad, nom_ciudad FROM ciudad ORDER BY nom_ciudad")->fetchAll();
+            $niveles   = $pdo->query("SELECT cod_nivel_educativo AS cod, nom_nivel_educativo AS nom FROM nivel_educativo")->fetchAll();
+            $idiomas   = $pdo->query("SELECT cod_idioma AS cod, nom_idioma AS nom FROM idioma")->fetchAll();
+            $discapac  = $pdo->query("SELECT cod_discapacidad AS cod, nom_discapacidad AS nom FROM discapacidad")->fetchAll();
+            responder(true, 'OK', compact('empresas', 'ciudades', 'niveles', 'idiomas', 'discapac'));
+            break;
 
         default:
             responder(false, 'Acción no reconocida: ' . htmlspecialchars($accion));
@@ -134,19 +163,11 @@ try {
     responder(false, 'Error inesperado: ' . $e->getMessage());
 }
 
-// ============================================================
-//  Helpers
-// ============================================================
-
-/**
- * Limpia y retorna solo los campos esperados del POST.
- * Devuelve null para campos vacíos (para no guardar cadenas vacías en la BD).
- */
+// ── Helpers ─────────────────────────────────────────────────
 function sanitizarPost(array $campos): array {
     $datos = [];
     foreach ($campos as $campo) {
-        $valor = $_POST[$campo] ?? '';
-        $valor = trim($valor);
+        $valor = trim($_POST[$campo] ?? '');
         $datos[$campo] = $valor !== '' ? $valor : null;
     }
     return $datos;

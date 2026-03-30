@@ -91,9 +91,6 @@ $mesesNombres = ['','ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT',
 <!-- NAV -->
 <nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-xl border-b border-zinc-100 shadow-sm flex justify-between items-center px-6 h-16">
     <div class="text-xl font-bold tracking-tighter text-emerald-800">Observatorio Laboral</div>
-    <div class="hidden md:flex gap-8 items-center font-medium text-sm tracking-tight">
-        <a class="text-zinc-500 hover:text-emerald-600 transition-colors" href="../oferta/registrar.php">Registrar Oferta</a>
-        <a class="text-zinc-500 hover:text-emerald-600 transition-colors" href="../empresa/registrar.php">Registrar Empresa</a>
         <a class="text-emerald-700 font-semibold border-b-2 border-emerald-600" href="reportes.php">Informes</a>
     </div>
     <div class="flex items-center gap-3">

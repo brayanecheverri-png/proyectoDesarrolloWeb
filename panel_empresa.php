@@ -64,6 +64,10 @@ $cod_empresa = $_SESSION['cod_empresa'] ?? '';
            href="verOfertaEmpleo/ver.php">
             <span class="material-symbols-outlined">description</span> Mis Postulaciones
         </a>
+        <a class="flex items-center gap-3 px-6 py-3 text-slate-600 hover:bg-slate-100 hover:pl-8 transition-all rounded-r-lg"
+           href="reportes/reportes.php">
+            <span class="material-symbols-outlined">description</span> Reportes
+        </a>
     </nav>
 </aside>
 

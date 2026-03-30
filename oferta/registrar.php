@@ -1,10 +1,213 @@
 <?php
 session_start();
 require_once '../conexion.php';
-$pdo          = conectar();
-$ciudades     = $pdo->query("SELECT cod_ciudad, nom_ciudad FROM ciudad ORDER BY nom_ciudad")->fetchAll();
-$niveles      = $pdo->query("SELECT cod_nivel_educativo, nom_nivel_educativo FROM nivel_educativo")->fetchAll();
-$idiomas      = $pdo->query("SELECT cod_idioma, nom_idioma FROM idioma")->fetchAll();
+$pdo = conectar();
+
+// ============================================================
+//  MANEJO DE ACCIONES (POST directo, sin API separada)
+// ============================================================
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $accion = trim($_POST['accion'] ?? '');
+
+    if ($accion === 'crear') {
+        $cargo      = trim($_POST['cargo']          ?? '');
+        $perfil     = trim($_POST['perfil']         ?? '');
+        $salario    = trim($_POST['salario']        ?? '') ?: null;
+        $reqs       = trim($_POST['requerimientos'] ?? '') ?: null;
+        $experiencia= trim($_POST['experiencia']    ?? '') ?: null;
+        $vacantes   = intval($_POST['num_vacante']  ?? 1);
+        $horario    = trim($_POST['horario']        ?? '') ?: null;
+        $duracion   = trim($_POST['duracion']       ?? '') ?: null;
+        $software   = trim($_POST['nom_software_maneja']   ?? '') ?: null;
+        $nivel_sw   = trim($_POST['nivel_manejo_software'] ?? '') ?: null;
+        $nit        = trim($_POST['nit_empresa']    ?? '') ?: ($_SESSION['cod_empresa'] ?? null);
+        $cod_nivel  = trim($_POST['cod_nivel_edu']  ?? '') ?: null;
+        $cod_idioma = trim($_POST['cod_idioma']     ?? '') ?: null;
+        $cod_ciudad = trim($_POST['cod_ciudad']     ?? '') ?: null;
+        $cod_disc   = trim($_POST['cod_discapacidad'] ?? '') ?: null;
+
+        if (empty($cargo)) {
+            responder(false, 'El campo Cargo es obligatorio.');
+        }
+        if (empty($nit)) {
+            responder(false, 'No se encontró el NIT de la empresa. Inicia sesión nuevamente.');
+        }
+
+        $num_oferta = 'OF-' . date('Ymd') . '-' . rand(100, 999);
+
+        try {
+            $stmt = $pdo->prepare("
+                INSERT INTO oferta_trabajo_of
+                    (num_oferta, nom_puesto_trabajo, descripcion, requisitos, salario,
+                     num_vacantes, horario, duracion, experiencia,
+                     cod_empresa, cod_discapacidad, cod_idioma, cod_nivel, cod_ciudad, estado)
+                VALUES
+                    (:num_oferta, :cargo, :perfil, :reqs, :salario,
+                     :vacantes, :horario, :duracion, :experiencia,
+                     :nit, :cod_disc, :cod_idioma, :cod_nivel, :cod_ciudad, 'AC')
+            ");
+            $stmt->execute([
+                ':num_oferta'  => $num_oferta,
+                ':cargo'       => $cargo,
+                ':perfil'      => $perfil,
+                ':reqs'        => $reqs,
+                ':salario'     => $salario,
+                ':vacantes'    => $vacantes,
+                ':horario'     => $horario,
+                ':duracion'    => $duracion,
+                ':experiencia' => $experiencia,
+                ':nit'         => $nit,
+                ':cod_disc'    => $cod_disc,
+                ':cod_idioma'  => $cod_idioma,
+                ':cod_nivel'   => $cod_nivel,
+                ':cod_ciudad'  => $cod_ciudad,
+            ]);
+            responder(true, 'Oferta publicada correctamente.', ['id' => $pdo->lastInsertId()]);
+        } catch (PDOException $e) {
+            responder(false, 'Error al guardar: ' . $e->getMessage());
+        }
+    }
+
+    if ($accion === 'actualizar') {
+        $id         = intval($_POST['cod_oferta']   ?? 0);
+        $cargo      = trim($_POST['cargo']          ?? '');
+        $perfil     = trim($_POST['perfil']         ?? '');
+        $salario    = trim($_POST['salario']        ?? '') ?: null;
+        $reqs       = trim($_POST['requerimientos'] ?? '') ?: null;
+        $experiencia= trim($_POST['experiencia']    ?? '') ?: null;
+        $vacantes   = intval($_POST['num_vacante']  ?? 1);
+        $horario    = trim($_POST['horario']        ?? '') ?: null;
+        $duracion   = trim($_POST['duracion']       ?? '') ?: null;
+        $nit        = trim($_POST['nit_empresa']    ?? '') ?: ($_SESSION['cod_empresa'] ?? null);
+        $cod_nivel  = trim($_POST['cod_nivel_edu']  ?? '') ?: null;
+        $cod_idioma = trim($_POST['cod_idioma']     ?? '') ?: null;
+        $cod_ciudad = trim($_POST['cod_ciudad']     ?? '') ?: null;
+        $cod_disc   = trim($_POST['cod_discapacidad'] ?? '') ?: null;
+
+        if (!$id)        responder(false, 'ID de oferta inválido.');
+        if (empty($cargo)) responder(false, 'El campo Cargo es obligatorio.');
+
+        try {
+            $stmt = $pdo->prepare("
+                UPDATE oferta_trabajo_of SET
+                    nom_puesto_trabajo = :cargo,
+                    descripcion        = :perfil,
+                    requisitos         = :reqs,
+                    salario            = :salario,
+                    num_vacantes       = :vacantes,
+                    horario            = :horario,
+                    duracion           = :duracion,
+                    experiencia        = :experiencia,
+                    cod_empresa        = :nit,
+                    cod_discapacidad   = :cod_disc,
+                    cod_idioma         = :cod_idioma,
+                    cod_nivel          = :cod_nivel,
+                    cod_ciudad         = :cod_ciudad
+                WHERE cod_oferta = :id
+            ");
+            $stmt->execute([
+                ':cargo'       => $cargo,
+                ':perfil'      => $perfil,
+                ':reqs'        => $reqs,
+                ':salario'     => $salario,
+                ':vacantes'    => $vacantes,
+                ':horario'     => $horario,
+                ':duracion'    => $duracion,
+                ':experiencia' => $experiencia,
+                ':nit'         => $nit,
+                ':cod_disc'    => $cod_disc,
+                ':cod_idioma'  => $cod_idioma,
+                ':cod_nivel'   => $cod_nivel,
+                ':cod_ciudad'  => $cod_ciudad,
+                ':id'          => $id,
+            ]);
+            responder(true, 'Oferta actualizada correctamente.');
+        } catch (PDOException $e) {
+            responder(false, 'Error al actualizar: ' . $e->getMessage());
+        }
+    }
+
+    if ($accion === 'eliminar') {
+        $id = intval($_POST['cod_oferta'] ?? 0);
+        if (!$id) responder(false, 'ID inválido.');
+        try {
+            $pdo->prepare("DELETE FROM postulacion WHERE cod_oferta = ?")->execute([$id]);
+            $stmt = $pdo->prepare("DELETE FROM oferta_trabajo_of WHERE cod_oferta = ?");
+            $stmt->execute([$id]);
+            if ($stmt->rowCount() === 0) responder(false, 'Oferta no encontrada.');
+            responder(true, 'Oferta eliminada correctamente.');
+        } catch (PDOException $e) {
+            responder(false, 'Error al eliminar: ' . $e->getMessage());
+        }
+    }
+}
+
+// Acción GET: listar o obtener
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $accion = trim($_GET['accion'] ?? '');
+
+    if ($accion === 'listar') {
+        try {
+            $stmt = $pdo->query("
+                SELECT o.cod_oferta,
+                       o.nom_puesto_trabajo AS cargo,
+                       o.descripcion        AS perfil,
+                       o.salario,
+                       o.num_vacantes       AS num_vacante,
+                       o.horario, o.duracion, o.experiencia,
+                       o.requisitos         AS requerimientos,
+                       o.fecha_publicacion,
+                       o.estado,
+                       e.nom_empresa,
+                       e.cod_empresa        AS nit_empresa,
+                       c.nom_ciudad,
+                       o.cod_ciudad,
+                       o.cod_nivel          AS cod_nivel_edu,
+                       o.cod_idioma,
+                       o.cod_discapacidad
+                FROM oferta_trabajo_of o
+                LEFT JOIN empresa_of e ON o.cod_empresa = e.cod_empresa
+                LEFT JOIN ciudad c     ON o.cod_ciudad  = c.cod_ciudad
+                ORDER BY o.cod_oferta DESC
+            ");
+            responder(true, 'OK', ['ofertas' => $stmt->fetchAll()]);
+        } catch (PDOException $e) {
+            responder(false, 'Error al listar: ' . $e->getMessage());
+        }
+    }
+
+    if ($accion === 'obtener') {
+        $id = intval($_GET['cod_oferta'] ?? 0);
+        if (!$id) responder(false, 'ID inválido.');
+        try {
+            $stmt = $pdo->prepare("
+                SELECT o.*, e.nom_empresa, c.nom_ciudad,
+                       n.nom_nivel_educativo, i.nom_idioma, d.nom_discapacidad,
+                       o.cod_nivel AS cod_nivel_edu
+                FROM oferta_trabajo_of o
+                LEFT JOIN empresa_of e      ON o.cod_empresa = e.cod_empresa
+                LEFT JOIN ciudad c          ON o.cod_ciudad  = c.cod_ciudad
+                LEFT JOIN nivel_educativo n ON o.cod_nivel   = n.cod_nivel_educativo
+                LEFT JOIN idioma i          ON o.cod_idioma  = i.cod_idioma
+                LEFT JOIN discapacidad d    ON o.cod_discapacidad = d.cod_discapacidad
+                WHERE o.cod_oferta = ?
+            ");
+            $stmt->execute([$id]);
+            $oferta = $stmt->fetch();
+            if (!$oferta) responder(false, 'Oferta no encontrada.');
+            responder(true, 'OK', ['oferta' => $oferta]);
+        } catch (PDOException $e) {
+            responder(false, 'Error: ' . $e->getMessage());
+        }
+    }
+}
+
+// ============================================================
+//  CARGA DE DATOS PARA EL FORMULARIO (render HTML)
+// ============================================================
+$ciudades       = $pdo->query("SELECT cod_ciudad, nom_ciudad FROM ciudad ORDER BY nom_ciudad")->fetchAll();
+$niveles        = $pdo->query("SELECT cod_nivel_educativo, nom_nivel_educativo FROM nivel_educativo")->fetchAll();
+$idiomas        = $pdo->query("SELECT cod_idioma, nom_idioma FROM idioma")->fetchAll();
 $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM discapacidad")->fetchAll();
 ?>
 <!DOCTYPE html>
@@ -13,14 +216,9 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Registrar Oferta - Observatorio Laboral</title>
-
-    <!-- Material Symbols -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <!-- Public Sans -->
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"/>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -78,14 +276,11 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
             },
         };
     </script>
-    <!-- Estilos propios -->
     <link rel="stylesheet" href="styles.css"/>
 </head>
 <body class="bg-background text-on-surface font-body min-h-screen flex flex-col">
 
-    <!-- ====================================================
-         BARRA SUPERIOR
-    ===================================================== -->
+    <!-- BARRA SUPERIOR -->
     <header class="fixed top-0 left-0 right-0 z-50 bg-slate-50 border-b border-slate-200 flex justify-between items-center w-full px-12 h-16">
         <div class="text-xl font-bold tracking-tighter text-green-800">Observatorio Laboral</div>
         <nav class="hidden md:flex items-center gap-8">
@@ -98,37 +293,35 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
     </header>
 
     <div class="flex flex-1 pt-16">
+    <aside class="fixed left-0 top-16 bottom-0 flex flex-col py-6 bg-white h-screen w-64 border-r border-slate-100 hidden lg:flex">
+    <div class="px-6 mb-6">
+        <h2 class="text-slate-800 font-bold text-lg">Gestión Empresa</h2>
+        <p class="text-slate-400 text-xs uppercase tracking-widest">Portal Empresarial</p>
+        </div>
+        <!-- BARRA LATERAL -->
+        <nav class="flex flex-col gap-1 pr-4 text-sm font-medium">
+        <a class="flex items-center gap-3 px-6 py-3 text-slate-600 hover:bg-slate-100 hover:pl-8 transition-all rounded-r-lg"
+           href="../oferta/registrar.php">
+            <span class="material-symbols-outlined">school</span> Publicar Oferta Empleo
+        </a>
+        <a class="flex items-center gap-3 px-6 py-3 text-slate-600 hover:bg-slate-100 hover:pl-8 transition-all rounded-r-lg"
+           href="directorio.php">
+            <span class="material-symbols-outlined">school</span> Directorio Egresados
+        </a>
+        <a class="flex items-center gap-3 px-6 py-3 text-slate-600 hover:bg-slate-100 hover:pl-8 transition-all rounded-r-lg"
+           href="../verOfertaEmpleo/ver.php">
+            <span class="material-symbols-outlined">description</span> Mis Postulaciones
+        </a>
+        <a class="flex items-center gap-3 px-6 py-3 text-slate-600 hover:bg-slate-100 hover:pl-8 transition-all rounded-r-lg"
+           href="../reportes/reportes.php">
+            <span class="material-symbols-outlined">description</span> Reportes
+        </a>
+        </nav>
+    </aside>
 
-        <!-- ====================================================
-             BARRA LATERAL
-        ===================================================== -->
-        <aside class="fixed left-0 top-16 bottom-0 flex flex-col py-6 bg-slate-100 h-screen w-64 border-r border-slate-200 overflow-y-auto z-40">
-            <div class="px-6 mb-8">
-                <h2 class="font-public-sans text-sm font-bold text-green-700 uppercase tracking-wider">Gestión</h2>
-                <p class="text-xs text-slate-500">Portal del Observatorio</p>
-            </div>
-            <nav class="flex flex-col gap-1 pr-4">
-                <a class="sidebar-active flex items-center gap-3 px-6 py-3 transition-all duration-300" href="registrar.php">
-                    <span class="material-symbols-outlined">post_add</span>
-                    <span class="font-public-sans text-sm">Registrar Oferta</span>
-                </a>
-                <a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-slate-200 hover:pl-8 transition-all duration-300" href="../verOfertaEmpleo/ver.php">
-                    <span class="material-symbols-outlined">description</span>
-                    <span class="font-public-sans text-sm">Ver Postulaciones</span>
-                </a>
-                <a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-slate-200 hover:pl-8 transition-all duration-300" href="#">
-                    <span class="material-symbols-outlined">analytics</span>
-                    <span class="font-public-sans text-sm">Reportes</span>
-                </a>
-            </nav>
-        </aside>
-
-        <!-- ====================================================
-             CONTENIDO PRINCIPAL
-        ===================================================== -->
+        <!-- CONTENIDO PRINCIPAL -->
         <main class="ml-64 flex-1 bg-surface p-12 overflow-y-auto">
 
-            <!-- Encabezado de página -->
             <div class="flex justify-between items-start mb-10">
                 <div>
                     <span class="text-xs font-bold uppercase tracking-[0.1rem] text-on-surface-variant">Gestión de Vacantes</span>
@@ -141,7 +334,7 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
                 </button>
             </div>
 
-            <!-- ── TABLA DE OFERTAS ── -->
+            <!-- TABLA DE OFERTAS -->
             <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/20 shadow-sm mb-12 overflow-x-auto">
                 <div class="px-8 py-5 border-b border-slate-100 flex items-center justify-between">
                     <h2 class="font-bold text-on-surface text-base">Ofertas Registradas</h2>
@@ -170,11 +363,10 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
                 </table>
             </div>
 
-            <!-- ── FORMULARIO CREAR / EDITAR ── -->
+            <!-- FORMULARIO CREAR / EDITAR -->
             <div id="form-container" class="hidden">
                 <div class="bg-surface-container-lowest p-12 rounded-xl shadow-sm border border-outline-variant/20 max-w-3xl">
 
-                    <!-- Encabezado del formulario -->
                     <div class="mb-10 border-l-4 border-primary pl-6">
                         <span class="text-[10px] font-bold uppercase tracking-[0.1rem] text-on-surface-variant block mb-2">Nueva Entrada</span>
                         <h2 id="form-titulo" class="text-3xl font-extrabold text-on-surface tracking-tight">Registrar Oferta de Trabajo</h2>
@@ -185,12 +377,11 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
 
                     <form id="form-oferta" class="space-y-8" novalidate>
 
-                        <!-- Sección: Información Principal -->
+                        <!-- Información Principal -->
                         <fieldset>
                             <legend class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6 block">Información Principal</legend>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                                <!-- Cargo -->
                                 <div class="col-span-2">
                                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="cargo">
                                         Cargo <span class="text-error">*</span>
@@ -200,7 +391,6 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
                                         class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40"/>
                                 </div>
 
-                                <!-- Perfil -->
                                 <div class="col-span-2">
                                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="perfil">
                                         Perfil del Cargo
@@ -210,7 +400,6 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
                                         class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40"/>
                                 </div>
 
-                                <!-- Salario -->
                                 <div>
                                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="salario">
                                         Salario
@@ -220,7 +409,6 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
                                         class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40"/>
                                 </div>
 
-                                <!-- Número de Vacantes -->
                                 <div>
                                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="num_vacante">
                                         Número de Vacantes
@@ -230,7 +418,6 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
                                         class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40"/>
                                 </div>
 
-                                <!-- Horario -->
                                 <div>
                                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="horario">
                                         Horario
@@ -240,7 +427,6 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
                                         class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40"/>
                                 </div>
 
-                                <!-- Duración -->
                                 <div>
                                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="duracion">
                                         Duración del Contrato
@@ -250,7 +436,6 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
                                         class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40"/>
                                 </div>
 
-                                <!-- Requerimientos -->
                                 <div class="col-span-2">
                                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="requerimientos">
                                         Requerimientos
@@ -260,7 +445,6 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
                                         class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 resize-none"></textarea>
                                 </div>
 
-                                <!-- Experiencia -->
                                 <div class="col-span-2">
                                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="experiencia">
                                         Experiencia Requerida
@@ -273,35 +457,13 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
                             </div>
                         </fieldset>
 
-                        <!-- Separador -->
                         <hr class="border-outline-variant/30"/>
 
-                        <!-- Sección: Software y Empresa -->
+                        <!-- Empresa -->
                         <fieldset>
-                            <legend class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6 block">Software y Empresa</legend>
+                            <legend class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6 block">Empresa</legend>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                                <!-- Software que maneja -->
-                                <div>
-                                    <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="nom_software_maneja">
-                                        Software Requerido
-                                    </label>
-                                    <input id="nom_software_maneja" name="nom_software_maneja" type="text"
-                                        placeholder="Ej. AutoCAD, SAP"
-                                        class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40"/>
-                                </div>
-
-                                <!-- Nivel de manejo -->
-                                <div>
-                                    <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="nivel_manejo_software">
-                                        Nivel de Manejo
-                                    </label>
-                                    <input id="nivel_manejo_software" name="nivel_manejo_software" type="text"
-                                        placeholder="Ej. Avanzado"
-                                        class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40"/>
-                                </div>
-
-                                <!-- NIT Empresa -->
                                 <div>
                                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="nit_empresa">
                                         NIT de Empresa <span class="text-error">*</span>
@@ -312,7 +474,6 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
                                         class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface opacity-60 cursor-not-allowed"/>
                                 </div>
 
-                                <!-- Tipo de Contrato -->
                                 <div>
                                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="cod_contrato">
                                         Código de Contrato
@@ -325,15 +486,13 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
                             </div>
                         </fieldset>
 
-                        <!-- Separador -->
                         <hr class="border-outline-variant/30"/>
 
-                        <!-- Sección: Clasificación -->
+                        <!-- Clasificación -->
                         <fieldset>
                             <legend class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6 block">Clasificación y Ubicación</legend>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                                <!-- Nivel Educativo -->
                                 <div>
                                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="cod_nivel_edu">
                                         Nivel Educativo
@@ -349,7 +508,6 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
                                     </select>
                                 </div>
 
-                                <!-- Idioma -->
                                 <div>
                                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="cod_idioma">
                                         Idioma Requerido
@@ -365,7 +523,6 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
                                     </select>
                                 </div>
 
-                                <!-- Ciudad -->
                                 <div>
                                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="cod_ciudad">
                                         Ciudad
@@ -381,7 +538,6 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
                                     </select>
                                 </div>
 
-                                <!-- Discapacidad -->
                                 <div>
                                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="cod_discapacidad">
                                         Inclusión / Discapacidad (opcional)
@@ -424,9 +580,7 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
         </main>
     </div>
 
-    <!-- ====================================================
-         MODAL DE CONFIRMACIÓN ELIMINAR
-    ===================================================== -->
+    <!-- MODAL ELIMINAR -->
     <div id="modal-backdrop" class="hidden fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
         <div class="bg-white rounded-xl shadow-xl p-10 max-w-sm w-full mx-4 text-center">
             <span class="material-symbols-outlined text-5xl text-error mb-4 block">warning</span>
@@ -445,18 +599,14 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
         </div>
     </div>
 
-    <!-- ====================================================
-         TOAST DE NOTIFICACIONES
-    ===================================================== -->
+    <!-- TOAST -->
     <div id="toast"
         class="hidden fixed bottom-8 right-8 z-50 bg-primary text-white flex items-center gap-3 px-6 py-4 rounded-xl shadow-lg text-sm font-semibold">
         <span id="toast-icon" class="material-symbols-outlined text-xl">check_circle</span>
         <span id="toast-msg">Mensaje</span>
     </div>
 
-    <!-- ====================================================
-         PIE DE PÁGINA
-    ===================================================== -->
+    <!-- PIE DE PÁGINA -->
     <footer class="bg-slate-50 w-full px-12 py-8 flex justify-between items-center border-t border-slate-200 z-10 relative ml-64">
         <div class="flex flex-col gap-1">
             <span class="text-sm font-black text-slate-800">Grupo Tridente</span>
@@ -469,8 +619,196 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
         </div>
     </footer>
 
-    <!-- JS propio -->
-    <script src="oferta.js"></script>
+<script>
+// ============================================================
+//  JS — apunta al mismo archivo (registrar.php)
+// ============================================================
+const API = 'registrar.php';
+let editandoId = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+    cargarOfertas();
+    document.getElementById('form-oferta').addEventListener('submit', manejarEnvio);
+    document.getElementById('btn-cancelar').addEventListener('click', cancelarEdicion);
+    document.getElementById('btn-nueva').addEventListener('click', () => mostrarFormulario(false));
+    document.getElementById('modal-confirmar-si').addEventListener('click', confirmarEliminar);
+    document.getElementById('modal-confirmar-no').addEventListener('click', cerrarModal);
+});
+
+async function cargarOfertas() {
+    try {
+        mostrarCargaTabla(true);
+        const res  = await fetch(`${API}?accion=listar`);
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.mensaje);
+        renderizarTabla(data.ofertas);
+    } catch (e) {
+        mostrarToast('Error al cargar ofertas: ' + e.message, 'error');
+    } finally {
+        mostrarCargaTabla(false);
+    }
+}
+
+function renderizarTabla(ofertas) {
+    const tbody = document.getElementById('tabla-body');
+    tbody.innerHTML = '';
+    if (!ofertas || ofertas.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-12 text-slate-400 text-sm uppercase tracking-widest">No hay ofertas registradas</td></tr>`;
+        return;
+    }
+    ofertas.forEach(o => {
+        const tr = document.createElement('tr');
+        tr.className = 'border-b border-slate-100 hover:bg-slate-50 transition-colors';
+        tr.innerHTML = `
+            <td class="py-4 px-6 text-sm font-semibold text-on-surface">${esc(o.cargo)}</td>
+            <td class="py-4 px-6 text-sm text-slate-500">${esc(o.perfil)}</td>
+            <td class="py-4 px-6 text-sm text-slate-500">${esc(o.nom_ciudad || o.cod_ciudad || '—')}</td>
+            <td class="py-4 px-6 text-sm text-slate-500">${esc(o.salario || '—')}</td>
+            <td class="py-4 px-6 text-sm text-slate-500">${esc(o.num_vacante)}</td>
+            <td class="py-4 px-6">
+                <div class="flex gap-2">
+                    <button onclick="cargarParaEditar(${o.cod_oferta})"
+                        class="flex items-center gap-1 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-primary border border-primary rounded hover:bg-secondary-container transition-colors">
+                        <span class="material-symbols-outlined text-base">edit</span> Editar
+                    </button>
+                    <button onclick="pedirConfirmacion(${o.cod_oferta})"
+                        class="flex items-center gap-1 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-error border border-error rounded hover:bg-error-container transition-colors">
+                        <span class="material-symbols-outlined text-base">delete</span> Eliminar
+                    </button>
+                </div>
+            </td>`;
+        tbody.appendChild(tr);
+    });
+}
+
+async function manejarEnvio(e) {
+    e.preventDefault();
+    const cargo = document.getElementById('cargo').value.trim();
+    const nit   = document.getElementById('nit_empresa').value.trim();
+    if (!cargo) { mostrarToast('El campo Cargo es obligatorio.', 'error'); return; }
+    if (!nit)   { mostrarToast('No se encontró el NIT de la empresa.', 'error'); return; }
+
+    const btn = document.getElementById('btn-submit');
+    activarSpinner(btn, true);
+
+    try {
+        const body = new URLSearchParams({
+            accion:               editandoId ? 'actualizar' : 'crear',
+            cargo,
+            perfil:               document.getElementById('perfil').value.trim(),
+            salario:              document.getElementById('salario').value.trim(),
+            requerimientos:       document.getElementById('requerimientos').value.trim(),
+            experiencia:          document.getElementById('experiencia').value.trim(),
+            num_vacante:          document.getElementById('num_vacante').value.trim() || '1',
+            horario:              document.getElementById('horario').value.trim(),
+            duracion:             document.getElementById('duracion').value.trim(),
+            nit_empresa:          nit,
+            cod_nivel_edu:        document.getElementById('cod_nivel_edu').value,
+            cod_idioma:           document.getElementById('cod_idioma').value,
+            cod_ciudad:           document.getElementById('cod_ciudad').value,
+            cod_discapacidad:     document.getElementById('cod_discapacidad').value,
+            ...(editandoId ? { cod_oferta: editandoId } : {})
+        });
+
+        const res  = await fetch(API, { method: 'POST', body });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.mensaje);
+
+        mostrarToast(editandoId ? 'Oferta actualizada.' : 'Oferta publicada correctamente.', 'exito');
+        cancelarEdicion();
+        cargarOfertas();
+    } catch (e) {
+        mostrarToast('Error: ' + e.message, 'error');
+    } finally {
+        activarSpinner(btn, false);
+    }
+}
+
+async function cargarParaEditar(id) {
+    try {
+        const res  = await fetch(`${API}?accion=obtener&cod_oferta=${id}`);
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.mensaje);
+        const o = data.oferta;
+        editandoId = id;
+        document.getElementById('cargo').value            = o.nom_puesto_trabajo || '';
+        document.getElementById('perfil').value           = o.descripcion || '';
+        document.getElementById('salario').value          = o.salario || '';
+        document.getElementById('requerimientos').value   = o.requisitos || '';
+        document.getElementById('experiencia').value      = o.experiencia || '';
+        document.getElementById('num_vacante').value      = o.num_vacantes || '';
+        document.getElementById('horario').value          = o.horario || '';
+        document.getElementById('duracion').value         = o.duracion || '';
+        document.getElementById('nit_empresa').value      = o.cod_empresa || '';
+        document.getElementById('cod_discapacidad').value = o.cod_discapacidad || '';
+        document.getElementById('cod_nivel_edu').value    = o.cod_nivel || '';
+        document.getElementById('cod_idioma').value       = o.cod_idioma || '';
+        document.getElementById('cod_ciudad').value       = o.cod_ciudad || '';
+        mostrarFormulario(true);
+        document.getElementById('form-container').scrollIntoView({ behavior: 'smooth' });
+    } catch (e) {
+        mostrarToast('Error al cargar oferta: ' + e.message, 'error');
+    }
+}
+
+let idEliminar = null;
+function pedirConfirmacion(id) { idEliminar = id; document.getElementById('modal-backdrop').classList.remove('hidden'); }
+function cerrarModal() { idEliminar = null; document.getElementById('modal-backdrop').classList.add('hidden'); }
+
+async function confirmarEliminar() {
+    cerrarModal();
+    if (!idEliminar) return;
+    try {
+        const res  = await fetch(API, { method: 'POST', body: new URLSearchParams({ accion: 'eliminar', cod_oferta: idEliminar }) });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.mensaje);
+        mostrarToast('Oferta eliminada.', 'exito');
+        cargarOfertas();
+    } catch (e) {
+        mostrarToast('Error al eliminar: ' + e.message, 'error');
+    }
+}
+
+function cancelarEdicion() {
+    const nit = document.getElementById('nit_empresa').value;
+    editandoId = null;
+    document.getElementById('form-oferta').reset();
+    document.getElementById('nit_empresa').value = nit;
+    mostrarFormulario(false);
+}
+
+function mostrarFormulario(esEdicion) {
+    document.getElementById('form-container').classList.remove('hidden');
+    document.getElementById('form-titulo').textContent = esEdicion ? 'Editar Oferta de Trabajo' : 'Registrar Oferta de Trabajo';
+    document.getElementById('form-subtitulo').textContent = esEdicion
+        ? 'Modifica los datos de la oferta seleccionada.'
+        : 'Complete los datos para publicar una nueva vacante en el sistema del observatorio.';
+    document.getElementById('btn-submit').querySelector('span:last-child').textContent = esEdicion ? 'Actualizar Oferta' : 'Publicar Oferta';
+    document.getElementById('btn-cancelar').classList.toggle('hidden', !esEdicion);
+}
+
+function mostrarCargaTabla(loading) { document.getElementById('tabla-spinner')?.classList.toggle('hidden', !loading); }
+
+function activarSpinner(btn, activo) {
+    btn.querySelector('.spinner')?.classList.toggle('hidden', !activo);
+    btn.disabled = activo;
+}
+
+function mostrarToast(mensaje, tipo = 'exito') {
+    const toast = document.getElementById('toast');
+    const icon  = document.getElementById('toast-icon');
+    document.getElementById('toast-msg').textContent = mensaje;
+    toast.className = toast.className.replace(/bg-\S+/, tipo === 'error' ? 'bg-red-600' : 'bg-primary');
+    icon.textContent = tipo === 'error' ? 'error' : 'check_circle';
+    toast.classList.remove('hidden');
+    setTimeout(() => toast.classList.add('hidden'), 3500);
+}
+
+function esc(str) {
+    if (str == null) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
 
 </body>
 </html>

@@ -284,7 +284,6 @@ $discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM di
     <header class="fixed top-0 left-0 right-0 z-50 bg-slate-50 border-b border-slate-200 flex justify-between items-center w-full px-12 h-16">
         <div class="text-xl font-bold tracking-tighter text-green-800">Observatorio Laboral</div>
         <nav class="hidden md:flex items-center gap-8">
-            <a class="text-slate-600 hover:text-green-600 transition-colors font-public-sans text-sm tracking-tight" href="/inicio/index.html">Inicio</a>
             <a class="text-slate-600 hover:text-green-600 transition-colors font-public-sans text-sm tracking-tight" href="../directorioOfertas/directorio.php">Ofertas de Empleo</a>
         </nav>
         <div class="flex items-center gap-4">

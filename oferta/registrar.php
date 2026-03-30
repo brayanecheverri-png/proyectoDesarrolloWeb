@@ -80,14 +80,11 @@
     <header class="fixed top-0 left-0 right-0 z-50 bg-slate-50 border-b border-slate-200 flex justify-between items-center w-full px-12 h-16">
         <div class="text-xl font-bold tracking-tighter text-green-800">Observatorio Laboral</div>
         <nav class="hidden md:flex items-center gap-8">
-            <a class="text-slate-600 hover:text-green-600 transition-colors font-public-sans text-sm tracking-tight" href="../index.html">Inicio</a>
+            <a class="text-slate-600 hover:text-green-600 transition-colors font-public-sans text-sm tracking-tight" href="/inicio/index.html">Inicio</a>
             <a class="text-slate-600 hover:text-green-600 transition-colors font-public-sans text-sm tracking-tight" href="../directorioOfertas/directorio.php">Ofertas de Empleo</a>
-            <a class="text-slate-600 hover:text-green-600 transition-colors font-public-sans text-sm tracking-tight" href="../directorioEmpresa/directorio.php">Empresas</a>
-            <a class="text-slate-600 hover:text-green-600 transition-colors font-public-sans text-sm tracking-tight" href="../directorioEgresado/directorio.php">Egresados/Estudiantes</a>
         </nav>
         <div class="flex items-center gap-4">
-            <button class="material-symbols-outlined text-slate-600 hover:bg-slate-100 p-2 rounded-full transition-all duration-200">account_circle</button>
-            <button class="material-symbols-outlined text-slate-600 hover:bg-slate-100 p-2 rounded-full transition-all duration-200">logout</button>
+            <a href="../index.html"><button class="material-symbols-outlined text-slate-600 hover:bg-slate-100 p-2 rounded-full transition-all duration-200">logout</button></a>
         </div>
     </header>
 
@@ -105,14 +102,6 @@
                 <a class="sidebar-active flex items-center gap-3 px-6 py-3 transition-all duration-300" href="registrar.php">
                     <span class="material-symbols-outlined">post_add</span>
                     <span class="font-public-sans text-sm">Registrar Oferta</span>
-                </a>
-                <a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-slate-200 hover:pl-8 transition-all duration-300" href="../egresados/registrar.php">
-                    <span class="material-symbols-outlined">school</span>
-                    <span class="font-public-sans text-sm">Registrar Egresado</span>
-                </a>
-                <a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-slate-200 hover:pl-8 transition-all duration-300" href="../empresa/registrar.php">
-                    <span class="material-symbols-outlined">domain</span>
-                    <span class="font-public-sans text-sm">Registrar Empresa</span>
                 </a>
                 <a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-slate-200 hover:pl-8 transition-all duration-300" href="../verOfertaEmpleo/ver.php">
                     <span class="material-symbols-outlined">description</span>

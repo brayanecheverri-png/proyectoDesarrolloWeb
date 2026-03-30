@@ -35,26 +35,23 @@ $errMsg  = [
 
 <nav class="fixed top-0 z-50 flex justify-between items-center w-full px-12 h-16 bg-white border-b border-slate-200 text-sm">
     <div class="text-xl font-bold tracking-tighter text-green-800">Observatorio Laboral</div>
-    <div class="hidden md:flex items-center space-x-8">
-        <a class="text-slate-600 hover:text-green-600 transition-colors" href="../index.html">Inicio</a>
-        <a class="text-slate-600 hover:text-green-600 transition-colors" href="../directorioOfertas/directorio.php">Ofertas</a>
-        <a class="text-slate-600 hover:text-green-600 transition-colors" href="../directorioEmpresa/directorio.php">Empresas</a>
-        <a class="text-slate-600 hover:text-green-600 transition-colors" href="../directorioEgresado/directorio.php">Egresados</a>
-    </div>
 </nav>
 
 <aside class="fixed left-0 top-16 bottom-0 flex flex-col py-6 w-64 border-r border-slate-200 bg-slate-100 text-sm font-medium z-40">
     <div class="px-6 mb-8">
-        <h2 class="font-bold text-lg">Gestión</h2>
-        <p class="text-slate-500 text-xs">Portal del Observatorio</p>
+        <h2 class="font-bold text-lg">Observatorio Laboral</h2>
+        <p class="text-slate-500 text-xs">Registro Egresados</p>
     </div>
     <nav class="flex-1 space-y-1 pr-4">
-        <a class="flex items-center px-6 py-3 text-slate-500 hover:bg-slate-200 transition-all" href="../oferta/registrar.php"><span class="material-symbols-outlined mr-3">post_add</span> Registrar Oferta</a>
         <a class="flex items-center px-6 py-3 text-green-700 bg-white rounded-r-lg shadow-sm font-bold" href="registrar.php"><span class="material-symbols-outlined mr-3">school</span> Registrar Egresado</a>
-        <a class="flex items-center px-6 py-3 text-slate-500 hover:bg-slate-200 transition-all" href="../empresa/registrar.php"><span class="material-symbols-outlined mr-3">domain</span> Registrar Empresa</a>
-        <a class="flex items-center px-6 py-3 text-slate-500 hover:bg-slate-200 transition-all" href="../verOfertaEmpleo/ver.php"><span class="material-symbols-outlined mr-3">description</span> Ver Postulaciones</a>
-        <a class="flex items-center px-6 py-3 text-slate-500 hover:bg-slate-200 transition-all" href="../reportes/reportes.php"><span class="material-symbols-outlined mr-3">analytics</span> Reportes</a>
     </nav>
+    <div class="mt-auto pt-6 border-t border-stone-200 dark:border-stone-800">
+            <div class="p-4 rounded-xl bg-primary-fixed/30 dark:bg-primary-container/20">
+                <a class="flex items-center px-4 py-3 text-zinc-500 hover:bg-emerald-50/50 hover:text-emerald-700 transition-all duration-300 font-medium text-sm rounded-lg" href="../index.html">
+                <span class="material-symbols-outlined mr-3">logout</span> Cerrar Sesión
+                </a>
+            </div>
+    </div>
 </aside>
 
 <main class="ml-64 mt-16 min-h-screen p-12">

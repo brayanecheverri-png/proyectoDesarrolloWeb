@@ -26,55 +26,26 @@ $error = $_GET["error"] ?? "";
             Observatorio Laboral
         </div>
         <nav class="hidden md:flex items-center space-x-8">
-            <a class="text-stone-600 dark:text-stone-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors duration-200" href="../index.html">Inicio</a>
-            <a class="text-stone-600 dark:text-stone-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors duration-200" href="../directorioOfertas/directorio.php">Ofertas de Empleo</a>
-            <a class="text-stone-600 dark:text-stone-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors duration-200" href="../directorioEmpresa/directorio.php">Empresas</a>
-            <a class="text-stone-600 dark:text-stone-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors duration-200" href="../directorioEgresado/directorio.php">Graduados</a>
-        </nav>
         <div class="flex items-center space-x-4">
-            <button class="p-2 text-green-700 dark:text-green-400 hover:bg-stone-50 dark:hover:bg-stone-800 rounded-full transition-colors duration-200">
-                <span class="material-symbols-outlined">notifications</span>
-            </button>
-            <button class="p-2 text-green-700 dark:text-green-400 hover:bg-stone-50 dark:hover:bg-stone-800 rounded-full transition-colors duration-200">
-                <span class="material-symbols-outlined">account_circle</span>
-            </button>
         </div>
     </header>
 
     <aside class="fixed left-0 top-16 bottom-0 w-64 bg-stone-50 dark:bg-stone-950 flex flex-col p-6 z-40 font-['Public_Sans'] text-sm font-medium border-r-0">
         <div class="mb-10">
-            <h2 class="text-lg font-black text-green-800 dark:text-green-200">Portal Admin</h2>
-            <p class="text-xs text-stone-500 uppercase tracking-widest mt-1">Suite de Gestión</p>
+            <h2 class="text-lg font-black text-green-800 dark:text-green-200">Observatorio Laboral</h2>
+            <p class="text-xs text-stone-500 uppercase tracking-widest mt-1">Registro Empresas</p>
         </div>
         <nav class="flex flex-col space-y-2">
-            <a class="flex items-center space-x-3 p-3 text-stone-500 dark:text-stone-500 hover:text-green-600 dark:hover:text-green-300 hover:translate-x-1 transition-transform duration-200 rounded-lg" href="../oferta/registrar.php">
-                <span class="material-symbols-outlined">post_add</span>
-                <span>Registrar Ofertas</span>
-            </a>
-            <a class="flex items-center space-x-3 p-3 text-stone-500 dark:text-stone-500 hover:text-green-600 dark:hover:text-green-300 hover:translate-x-1 transition-transform duration-200 rounded-lg" href="../egresado/registrar.php">
-                <span class="material-symbols-outlined">school</span>
-                <span>Registrar Graduados</span>
-            </a>
             <a class="flex items-center space-x-3 p-3 text-green-700 dark:text-green-400 bg-white dark:bg-stone-900 shadow-sm rounded-lg" href="../empresa/registrar.php">
                 <span class="material-symbols-outlined">domain</span>
                 <span>Registrar Empresas</span>
             </a>
-            <a class="flex items-center space-x-3 py-3 px-4 text-slate-500 hover:bg-slate-200 hover:pl-6 transition-all duration-300 rounded-l-lg group" href="../verPostulaciones/ver.php">
-                <span class="material-symbols-outlined text-xl">description</span>
-                <span class="font-medium text-sm">Ver Postulaciones</span>
-            </a>
-            <a class="flex items-center space-x-3 py-3 px-4 text-slate-500 hover:bg-slate-200 hover:pl-6 transition-all duration-300 rounded-l-lg group border-r-4 border-transparent" href="../reportes/reportes.php">
-                <span class="material-symbols-outlined text-xl">analytics</span>
-                <span class="font-medium text-sm">Reportes</span>
-            </a>
         </nav>
         <div class="mt-auto pt-6 border-t border-stone-200 dark:border-stone-800">
             <div class="p-4 rounded-xl bg-primary-fixed/30 dark:bg-primary-container/20">
-                <p class="text-[10px] font-bold text-on-primary-fixed uppercase tracking-tighter mb-1">Estado de Observación</p>
-                <div class="flex items-center space-x-2">
-                    <span class="w-2 h-2 rounded-full bg-primary"></span>
-                    <span class="text-xs font-semibold text-primary">Datos en Vivo Activos</span>
-                </div>
+                <a class="flex items-center px-4 py-3 text-zinc-500 hover:bg-emerald-50/50 hover:text-emerald-700 transition-all duration-300 font-medium text-sm rounded-lg" href="../index.html">
+                <span class="material-symbols-outlined mr-3">logout</span> Cerrar Sesión
+                </a>
             </div>
         </div>
     </aside>
@@ -174,7 +145,7 @@ $error = $_GET["error"] ?? "";
             </div>
 
             <footer class="mt-16 text-center text-[10px] font-bold text-outline uppercase tracking-[0.3em]">
-                Observatorio Laboral © 2024 • Serie de Archivo Editorial
+                Observatorio Laboral © 2026 • Grupo Tridente
             </footer>
         </div>
     </main>

@@ -3,198 +3,230 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Observatorio Laboral | Conectando Talento y Oportunidad</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="styles.css"/>
-    <script src="script.js"></script>
-</head>
-<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+    <title>Observatorio Laboral - Acceso al Sistema</title>
 
-    <!-- Barra de Navegación Superior -->
-    <header class="sticky top-0 z-50 glass-nav border-b border-surface-container">
-        <nav class="flex justify-between items-center w-full px-12 h-16 max-w-none">
-            <div class="text-xl font-bold tracking-tighter text-green-800">
-                Observatorio Laboral
-            </div>
-            <div class="hidden md:flex items-center space-x-8 font-public-sans text-sm tracking-tight">
-                <a class="text-green-700 font-semibold border-b-2 border-green-700 pb-1" href="index.html">Inicio</a>
-                <a class="text-slate-600 hover:text-green-600 transition-colors" href="directorioOfertas/directorio.php">Ofertas de Empleo</a>
-                <a class="text-slate-600 hover:text-green-600 transition-colors" href="directorioEmpresa/directorio.php">Empresas</a>
-                <a class="text-slate-600 hover:text-green-600 transition-colors" href="directorioEgresado/directorio.php">Egresados/Estudiantes</a>
-            </div>
-            <div class="flex items-center space-x-4">
-                <button class="material-symbols-outlined text-slate-600 hover:bg-slate-100 p-2 rounded-full transition-all duration-200">account_circle</button>
-                <button class="material-symbols-outlined text-slate-600 hover:bg-slate-100 p-2 rounded-full transition-all duration-200">logout</button>
-            </div>
-        </nav>
+    <!-- Google Fonts: Public Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+    <!-- Material Symbols Outlined (íconos) -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <!-- Tailwind CSS con plugins (configuración en línea para mantener los colores personalizados) -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-fixed": "#ffd9e2",
+                        "surface-dim": "#dadada",
+                        "on-surface-variant": "#40493d",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#f1f1f1",
+                        "tertiary": "#923357",
+                        "surface-variant": "#e2e2e2",
+                        "on-secondary": "#ffffff",
+                        "outline": "#707a6c",
+                        "on-secondary-fixed": "#052106",
+                        "tertiary-container": "#b14b6f",
+                        "surface-tint": "#1b6d24",
+                        "secondary-fixed-dim": "#add0a6",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#304e2e",
+                        "on-primary-fixed": "#002204",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#88d982",
+                        "secondary-container": "#c6e9be",
+                        "primary": "#0d631b",
+                        "surface": "#f9f9f9",
+                        "surface-container": "#eeeeee",
+                        "inverse-surface": "#2f3131",
+                        "background": "#f9f9f9",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f3f3f3",
+                        "secondary-fixed": "#c9ecc1",
+                        "on-tertiary-fixed-variant": "#7f2448",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#f9f9f9",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#ffedf0",
+                        "tertiary-fixed-dim": "#ffb1c7",
+                        "surface-container-high": "#e8e8e8",
+                        "on-background": "#1a1c1c",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-primary-fixed-variant": "#005312",
+                        "primary-fixed": "#a3f69c",
+                        "on-surface": "#1a1c1c",
+                        "secondary": "#476644",
+                        "primary-fixed-dim": "#88d982",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#bfcaba",
+                        "on-secondary-container": "#4c6a48",
+                        "on-primary-container": "#cbffc2",
+                        "primary-container": "#2e7d32",
+                        "on-tertiary-fixed": "#3f001c"
+                    },
+                    fontFamily: {
+                        "headline": ["Public Sans", "sans-serif"],
+                        "body": ["Public Sans", "sans-serif"],
+                        "label": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Estilos propios (archivo separado) -->
+    <link href="estilos.css" rel="stylesheet"/>
+</head>
+
+<body class="bg-surface text-on-background min-h-screen flex flex-col antialiased">
+
+    <!-- =============================================
+         CABECERA / TopAppBar
+    ============================================= -->
+    <header class="bg-stone-50/80 dark:bg-stone-950/80 backdrop-blur-xl fixed top-0 w-full z-50 font-sans antialiased text-stone-900 dark:text-stone-100 flex justify-between items-center px-12 py-6 max-w-full mx-auto">
+        <div class="text-xl font-bold tracking-tight text-green-800 dark:text-green-300">
+            Observatorio Laboral
+        </div>
+        <div class="hidden md:flex gap-8"></div>
     </header>
 
-    <div class="flex flex-1">
+    <!-- =============================================
+         CONTENIDO PRINCIPAL
+    ============================================= -->
+    <main class="flex-grow flex items-center justify-center px-6 pt-24 pb-12 bg-surface-container-low">
+        <div class="w-full max-w-md">
 
-        <!-- Navegación Lateral -->
-        <aside class="fixed left-0 top-16 bottom-0 w-64 flex flex-col py-6 bg-slate-100 border-r border-slate-200 z-40 overflow-y-auto">
-            <div class="px-6 mb-8">
-                <h2 class="text-xs uppercase tracking-widest text-slate-500 font-bold">Gestión</h2>
-                <p class="text-[10px] text-slate-400">Portal del Observatorio</p>
-            </div>
-            <nav class="flex flex-col space-y-1 pl-4">
-                <a class="flex items-center space-x-3 py-3 px-4 text-slate-500 hover:bg-slate-200 hover:pl-6 transition-all duration-300 rounded-l-lg group" href="oferta/registrar.php">
-                    <span class="material-symbols-outlined text-xl">post_add</span>
-                    <span class="font-medium text-sm">Registrar Oferta</span>
-                </a>
-                <a class="flex items-center space-x-3 py-3 px-4 text-slate-500 hover:bg-slate-200 hover:pl-6 transition-all duration-300 rounded-l-lg group" href="egresados/registrar.php">
-                    <span class="material-symbols-outlined text-xl">school</span>
-                    <span class="font-medium text-sm">Registrar Egresado</span>
-                </a>
-                <a class="flex items-center space-x-3 py-3 px-4 text-slate-500 hover:bg-slate-200 hover:pl-6 transition-all duration-300 rounded-l-lg group" href="empresa/registrar.php">
-                    <span class="material-symbols-outlined text-xl">domain</span>
-                    <span class="font-medium text-sm">Registrar Empresa</span>
-                </a>
-                <a class="flex items-center space-x-3 py-3 px-4 text-slate-500 hover:bg-slate-200 hover:pl-6 transition-all duration-300 rounded-l-lg group" href="verOfertaEmpleo/ver.php">
-                    <span class="material-symbols-outlined text-xl">description</span>
-                    <span class="font-medium text-sm">Ver Postulaciones</span>
-                </a>
-                <a class="flex items-center space-x-3 py-3 px-4 text-slate-500 hover:bg-slate-200 hover:pl-6 transition-all duration-300 rounded-l-lg group border-r-4 border-transparent" href="reportes/reportes.php">
-                    <span class="material-symbols-outlined text-xl">analytics</span>
-                    <span class="font-medium text-sm">Reportes</span>
-                </a>
-            </nav>
-        </aside>
+            <!-- Tarjeta de Login -->
+            <div class="bg-surface-container-lowest p-8 md:p-12 rounded-xl shadow-[0_12px_32px_-4px_rgba(0,34,4,0.08)] ring-1 ring-outline-variant/10">
 
-        <!-- Contenido Principal -->
-        <main class="ml-64 flex-1 overflow-x-hidden">
-
-            <!-- Sección Hero -->
-            <section class="relative h-[600px] flex items-center px-16 overflow-hidden bg-surface">
-                <div class="relative z-10 max-w-2xl">
-                    <span class="inline-block px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold tracking-[0.1em] uppercase rounded-full mb-6">Conectando Talento con el Futuro</span>
-                    <h1 class="text-6xl font-extrabold tracking-tighter text-on-surface leading-tight mb-6">
-                        Cerrando la Brecha <span class="text-primary italic">Fuerza Laboral.</span>
+                <!-- Título -->
+                <div class="mb-10 text-center">
+                    <h1 class="text-3xl font-extrabold tracking-tight text-on-surface mb-2">
+                        Acceso al Sistema
                     </h1>
-                    <p class="text-lg text-on-surface-variant font-light leading-relaxed mb-10 max-w-lg">
-                        El Observatorio Laboral es un ecosistema sofisticado diseñado para alinear la demanda corporativa con las habilidades en evolución de nuestra fuerza laboral. Cubrimos información basada en datos para fomentar conexiones profesionales significativas.
+                    <p class="text-on-surface-variant/70 body-lg">
+                        Ingresa tus credenciales para continuar
                     </p>
-                    <div class="flex items-center space-x-6">
-                        <button class="bg-primary text-on-primary px-8 py-4 rounded-md font-semibold text-sm hover:bg-primary-container transition-all shadow-sm active:scale-95 duration-150">
-                            Explorar Oportunidades
+                </div>
+
+                <!-- Mensaje de error (oculto; JS lo muestra cuando hay fallo) -->
+                <div id="mensaje-error" role="alert"></div>
+
+                <!-- Formulario de Login -->
+                <form id="formulario-login" class="space-y-6" novalidate>
+
+                    <!-- Campo: Usuario -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold uppercase tracking-[0.05rem] text-on-surface-variant" for="usuario">
+                            Usuario
+                        </label>
+                        <div class="relative">
+                            <input
+                                class="w-full bg-surface-container-low border-none ghost-border rounded-lg px-4 py-3 text-on-surface placeholder:text-outline/50 focus:ring-2 focus:ring-primary-fixed-dim focus:ring-offset-2 transition-all"
+                                id="usuario"
+                                name="usuario"
+                                placeholder="nombre.apellido"
+                                type="text"
+                                autocomplete="username"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Campo: Contraseña -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold uppercase tracking-[0.05rem] text-on-surface-variant" for="password">
+                            Contraseña
+                        </label>
+                        <div class="relative">
+                            <input
+                                class="w-full bg-surface-container-low border-none ghost-border rounded-lg px-4 py-3 text-on-surface placeholder:text-outline/50 focus:ring-2 focus:ring-primary-fixed-dim focus:ring-offset-2 transition-all"
+                                id="password"
+                                name="password"
+                                placeholder="••••••••"
+                                type="password"
+                                autocomplete="current-password"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Opciones: Recordarme / Olvidé contraseña -->
+                    <div class="flex items-center justify-between py-2">
+                        <label class="flex items-center space-x-3 cursor-pointer group">
+                            <div class="relative flex items-center">
+                                <input
+                                    class="peer h-5 w-5 rounded border-outline-variant bg-surface-container-lowest text-primary focus:ring-primary-fixed-dim transition-all"
+                                    type="checkbox"
+                                    name="recordarme"
+                                    id="recordarme"
+                                />
+                            </div>
+                            <span class="text-sm text-on-surface-variant group-hover:text-on-surface transition-colors">
+                                Recordarme
+                            </span>
+                        </label>
+                        <a class="text-sm font-medium text-primary hover:text-primary-container transition-colors underline-offset-4 hover:underline" href="recuperar_password.php">
+                            Olvidé mi contraseña
+                        </a>
+                    </div>
+
+                    <!-- Botón: Iniciar Sesión -->
+                    <button
+                        id="boton-login"
+                        class="w-full bg-[#2E7D32] text-white font-semibold py-4 px-6 rounded-lg shadow-sm hover:bg-[#256428] transition-all active:opacity-70 flex justify-center items-center gap-2"
+                        type="submit"
+                    >
+                        <span>Iniciar Sesión</span>
+                        <span class="material-symbols-outlined text-lg">login</span>
+                    </button>
+
+                </form>
+
+                <!-- Sección: Crear Cuenta -->
+                <div class="mt-10 pt-8 border-t border-outline-variant/30 text-center">
+                    <p class="text-sm font-semibold text-on-surface-variant mb-6">
+                        ¿No tienes una cuenta?
+                    </p>
+                    <div class="flex flex-col gap-3">
+                        <button class="w-full bg-surface-container-low text-primary-container border border-primary-container/20 font-semibold py-3 px-4 rounded-lg hover:bg-primary-container/5 transition-all flex items-center justify-center gap-2 group">
+                            <span class="material-symbols-outlined text-xl">school</span>
+                            <a href="/egresados/registrar.php"><span class="text-sm">Registrarme como Estudiante/Egresado</span></a>
                         </button>
-                        <button class="text-primary font-semibold text-sm border-b border-transparent hover:border-primary transition-all duration-200">
-                            Asóciate con nosotros →
+                        <button class="w-full bg-surface-container-low text-primary-container border border-primary-container/20 font-semibold py-3 px-4 rounded-lg hover:bg-primary-container/5 transition-all flex items-center justify-center gap-2 group">
+                            <span class="material-symbols-outlined text-xl">corporate_fare</span>
+                            <a href="/empresa/registrar.php"><span class="text-sm">Registrarme como Empresa</span></a>
                         </button>
                     </div>
                 </div>
-                <div class="absolute right-0 top-0 w-1/2 h-full">
-                    <div class="absolute inset-0 bg-gradient-to-l from-transparent to-surface z-10"></div>
-                    <img class="w-full h-full object-cover grayscale opacity-40 mix-blend-multiply"
-                         alt="Entorno de oficina profesional moderno con ventanas del piso al techo con vista a una ciudad durante la hora dorada"
-                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4pzf0o_IxaqPL6PXnzJStZVRZc_kMzkyBwJENKxZjg3mqmaz6DufICsWbe7BLz26Qd56CdfbJ2UlpelSd77JpJ8cGrPMDTIws-oQPXFFBKvNDyAyV_OHwhHEdmUXh_vKW7Xv_QZ-6heA3CHhDXW8E4X8HxYf8syeMv2yd1R00b89iXM3ywImM-OORVBLiMue4GaA-tvrED7pqseAV3qKdYUZph43MPCtBaVaXcqoYw68fAeGkGFNwiGaeovRhYnPEXPHxlk5zB80"/>
-                </div>
-            </section>
 
-            <!-- Cuadrícula Analítica / Bento -->
-            <section class="px-16 py-24 bg-surface-container">
-                <div class="grid grid-cols-12 gap-8">
+            </div>
 
-                    <!-- El Monolito -->
-                    <div class="col-span-12 lg:col-span-8 p-12 bg-surface-container-lowest flex flex-col justify-between min-h-[400px]">
-                        <div>
-                            <span class="label-md font-bold tracking-widest text-slate-400 mb-4 block">TENDENCIAS EN VIVO 2024</span>
-                            <h2 class="text-4xl font-bold tracking-tight mb-6 text-on-surface">El Estado del Empleo Moderno</h2>
-                            <p class="text-on-surface-variant max-w-xl leading-relaxed">
-                                Nuestro observatorio proporciona mapeo en tiempo real de los sectores laborales emergentes. Al integrar los resultados académicos con las necesidades del mercado, garantizamos que cada egresado encuentre una trayectoria que se adapte a su potencial único.
-                            </p>
-                        </div>
-                        <div class="flex items-end justify-between mt-12">
-                            <div class="space-y-1">
-                                <div class="text-5xl font-black text-primary">3.450+</div>
-                                <div class="text-xs uppercase font-bold text-slate-500 tracking-wider">Vacantes Activas</div>
-                            </div>
-                            <div class="space-y-1">
-                                <div class="text-5xl font-black text-primary">89%</div>
-                                <div class="text-xs uppercase font-bold text-slate-500 tracking-wider">Tasa de Inserción</div>
-                            </div>
-                            <div class="space-y-1">
-                                <div class="text-5xl font-black text-primary">120</div>
-                                <div class="text-xs uppercase font-bold text-slate-500 tracking-wider">Empresas Aliadas</div>
-                            </div>
-                        </div>
-                    </div>
+        </div>
+    </main>
 
-                    <!-- Tarjetas Asimétricas Laterales -->
-                    <div class="col-span-12 lg:col-span-4 flex flex-col gap-8">
-                        <div class="bg-primary text-on-primary p-8 flex flex-col justify-between flex-1">
-                            <span class="material-symbols-outlined text-3xl mb-4">school</span>
-                            <div>
-                                <h3 class="text-xl font-bold mb-2">Para Egresados</h3>
-                                <p class="text-on-primary-container text-sm leading-relaxed mb-4">Accede a oportunidades de empleo adaptadas a tu perfil académico.</p>
-                                <a class="text-xs font-black uppercase tracking-widest underline decoration-2" href="#">Crear Perfil</a>
-                            </div>
-                        </div>
-                        <div class="bg-surface-container-lowest p-8 flex flex-col justify-between flex-1 ghost-border">
-                            <span class="material-symbols-outlined text-3xl mb-4 text-primary">domain</span>
-                            <div>
-                                <h3 class="text-xl font-bold mb-2 text-on-surface">Para Empresas</h3>
-                                <p class="text-on-surface-variant text-sm leading-relaxed mb-4">Incorpora los mejores talentos directamente desde la fuente.</p>
-                                <a class="text-xs font-black uppercase tracking-widest text-primary" href="#">Unirse a la Red</a>
-                            </div>
-                        </div>
-                    </div>
+    <!-- =============================================
+         PIE DE PÁGINA / Footer
+    ============================================= -->
+    <footer class="bg-stone-100 dark:bg-stone-900 w-full py-12 px-12">
+        <div class="flex flex-col md:flex-row justify-between items-center w-full gap-6">
+            <div class="text-sm font-sans tracking-tight text-stone-600 dark:text-stone-400">
+                © 2026 Observatorio Laboral.
+            </div>
+        </div>
+    </footer>
 
-                </div>
-            </section>
-
-            <!-- Fila de Empresas Asociadas -->
-            <section class="px-16 py-12 bg-surface">
-                <div class="flex items-center justify-between border-t border-slate-200 pt-12">
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Empresas Aliadas</span>
-                    <div class="flex items-center space-x-12 opacity-40 grayscale">
-                        <img class="h-6" alt="Logo empresa tecnología 1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr8rWisRP53PiNZnhE7DMdGV9R2hs5MlHKBi1nPPp-nDXQNNHGIR5cmYAh0qeiSD4P8AmBrzy6FN8YMlMXonThG3aIYtb7fMY2Fh1Pk2BBQ8vLpe0X5AcpxU46uYqJSi7djlhhCxge5903XaH3yesbgCbAD21M_r_RGTYI_3xhKgf1bCTEhxrB1LcCJhnWFwN7hERqxc-AHxtabtfykg-GxkVzgOB87NwT0DrMlamcBCX9ysNuJd_kTPNEWCV9h0zSAMAXUU8CZv0"/>
-                        <img class="h-6" alt="Logo empresa finanzas 2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBVx8inKniGfRFNpcCFajkVexjdsC7uBbOr5lPUbUpf0WBDWMEyMn_BpapCHzVmnMpfAd2CvNf203T8K4J-bj2vLvE95y35iUCeifdyQ32GYq2hXyWC3s-_OtPvWsMKYcmUhhh7-KyOrHG7yG_XWUfmDksSvADNGFITDbNHZtnJNv-LIZsQjy-Sqy8r-0-BbNCC31Ou7LB20-Y6EsidMIBEITF_PaxW9YPn954fUHamXhocafaaWSH9fVfiQ1oZcz_bsxmtZzojfY"/>
-                        <img class="h-6" alt="Logo empresa diseño 3" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1YCvomNRxU86vixurDNLl4pwT_gBA7T0D1NtSI8nKIZh-iuCOHHkE_Ou2zuzDxS1-QaqNTqqm-XIjX0yxfENIa-leET5S3j9LOySBBDmxOLv3IjyhfePA7kHxyGkyTmgQJYgFCuligV9jH8gh0aCtnxHBG9qRLbp0nqmrPG3JgdNenqGQD9hiTlT2e7DkPdGVp9re-gg2mfq9tBX-hPHw09k_YMafsiMbwIeW34lv2Fa2wwS91EX3BKHtBPGcPvf6AYRVr0v001M"/>
-                        <img class="h-6" alt="Logo empresa logística 4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6rmoXZNgG6Bbd9Hm5cuyOUxXYDDo8klZkV0gFKxgquEEEweSp_zODgGYb-6GGaEV_TMfz97L5f7auZ0AS1g457OeD-hqbzhUdNJ87TEH-Rp-tTxfL7VpBUpn7rl8icAkXsTuyZtCPsoq58gHDqjS7j7RyiSgdPjLqhMy7JSfIFbgIeQaryu3UzMBzol1oweyjE8tMpegIDEXaBVBel_t0qbVRb86rbImSkyWFIcRKI1MeKWgkmjz4KsoewyD_p1Bq9NyLt1ML8h0"/>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Pie de Página -->
-            <footer class="w-full px-12 py-12 flex justify-between items-center bg-slate-50 border-t border-slate-200">
-                <div class="text-sm font-black text-slate-800">
-                    Grupo Tridente
-                </div>
-                <div class="text-[10px] uppercase tracking-widest text-slate-400">
-                    © 2024 Observatorio Laboral. Todos los derechos reservados.
-                </div>
-                <div class="flex space-x-6 text-[10px] uppercase tracking-widest font-public-sans text-slate-400">
-                    <a class="hover:text-green-700 transition-colors" href="#">Política de Privacidad</a>
-                    <a class="hover:text-green-700 transition-colors" href="#">Términos de Servicio</a>
-                    <a class="hover:text-green-700 transition-colors" href="#">Soporte de Contacto</a>
-                </div>
-            </footer>
-
-        </main>
-    </div>
-
-    <!-- Navegación Móvil (visible solo en pantallas pequeñas) -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg flex justify-around items-center h-16 border-t border-slate-100 z-50">
-        <a class="flex flex-col items-center text-green-700" href="#">
-            <span class="material-symbols-outlined">home</span>
-            <span class="text-[10px] font-bold">Inicio</span>
-        </a>
-        <a class="flex flex-col items-center text-slate-400" href="#">
-            <span class="material-symbols-outlined">work</span>
-            <span class="text-[10px]">Ofertas</span>
-        </a>
-        <a class="flex flex-col items-center text-slate-400" href="#">
-            <span class="material-symbols-outlined">analytics</span>
-            <span class="text-[10px]">Datos</span>
-        </a>
-        <a class="flex flex-col items-center text-slate-400" href="#">
-            <span class="material-symbols-outlined">person</span>
-            <span class="text-[10px]">Perfil</span>
-        </a>
-    </nav>
+    <!-- Script propio (al final del body para que el DOM ya esté listo) -->
+    <script src="login.js"></script>
 
 </body>
 </html>

@@ -19,9 +19,22 @@ try {
         // ── LISTAR ──────────────────────────────────────────
         case 'listar':
             $stmt = $pdo->query("
-                SELECT o.cod_oferta, o.nom_puesto_trabajo, o.salario,
-                       o.num_vacantes, o.fecha_publicacion, o.estado,
-                       e.nom_empresa, c.nom_ciudad
+                SELECT o.cod_oferta,
+                       o.nom_puesto_trabajo  AS cargo,
+                       o.descripcion         AS perfil,
+                       o.salario,
+                       o.num_vacantes        AS num_vacante,
+                       o.horario, o.duracion, o.experiencia,
+                       o.requisitos          AS requerimientos,
+                       o.fecha_publicacion,
+                       o.estado,
+                       e.nom_empresa,
+                       e.cod_empresa         AS nit_empresa,
+                       c.nom_ciudad,
+                       o.cod_ciudad,
+                       o.cod_nivel           AS cod_nivel_edu,
+                       o.cod_idioma,
+                       o.cod_discapacidad
                 FROM oferta_trabajo_of o
                 LEFT JOIN empresa_of e ON o.cod_empresa = e.cod_empresa
                 LEFT JOIN ciudad c     ON o.cod_ciudad  = c.cod_ciudad
@@ -54,6 +67,14 @@ try {
 
         // ── CREAR ─────────────────────────────────────────────
         case 'crear':
+            // Normalizar campos: el JS envía nombres distintos al esquema de BD
+            $_POST['nom_puesto_trabajo'] = trim($_POST['cargo']         ?? $_POST['nom_puesto_trabajo'] ?? '');
+            $_POST['descripcion']        = trim($_POST['perfil']        ?? $_POST['descripcion']        ?? '');
+            $_POST['requisitos']         = trim($_POST['requerimientos'] ?? $_POST['requisitos']         ?? '');
+            $_POST['cod_empresa']        = trim($_POST['nit_empresa']   ?? $_POST['cod_empresa']        ?? '');
+            $_POST['num_vacantes']       = trim($_POST['num_vacante']   ?? $_POST['num_vacantes']       ?? '1');
+            $_POST['cod_nivel']          = trim($_POST['cod_nivel_edu'] ?? $_POST['cod_nivel']          ?? '');
+
             $datos = sanitizarPost([
                 'nom_puesto_trabajo', 'descripcion', 'requisitos', 'salario',
                 'num_vacantes', 'horario', 'duracion', 'experiencia',
@@ -87,6 +108,14 @@ try {
         case 'actualizar':
             $id = filter_input(INPUT_POST, 'cod_oferta', FILTER_VALIDATE_INT);
             if (!$id) responder(false, 'ID inválido.');
+
+            // Normalizar campos igual que en crear
+            $_POST['nom_puesto_trabajo'] = trim($_POST['cargo']         ?? $_POST['nom_puesto_trabajo'] ?? '');
+            $_POST['descripcion']        = trim($_POST['perfil']        ?? $_POST['descripcion']        ?? '');
+            $_POST['requisitos']         = trim($_POST['requerimientos'] ?? $_POST['requisitos']         ?? '');
+            $_POST['cod_empresa']        = trim($_POST['nit_empresa']   ?? $_POST['cod_empresa']        ?? '');
+            $_POST['num_vacantes']       = trim($_POST['num_vacante']   ?? $_POST['num_vacantes']       ?? '1');
+            $_POST['cod_nivel']          = trim($_POST['cod_nivel_edu'] ?? $_POST['cod_nivel']          ?? '');
 
             $datos = sanitizarPost([
                 'nom_puesto_trabajo', 'descripcion', 'requisitos', 'salario',

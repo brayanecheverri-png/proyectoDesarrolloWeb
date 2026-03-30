@@ -59,7 +59,7 @@ $total_vacantes  = $pdo->query("SELECT SUM(num_vacantes) FROM oferta_trabajo_of 
 <nav class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center w-full px-12 h-16 bg-white border-b border-slate-200 text-sm">
     <div class="text-xl font-bold tracking-tighter text-green-800">Observatorio Laboral</div>
     <div class="hidden md:flex items-center space-x-8">
-        <a class="text-slate-600 hover:text-green-600 transition-colors" href="../index.html">Inicio</a>
+        <a class="text-slate-600 hover:text-green-600 transition-colors" href="/inicio/index.html">Inicio</a>
         <a class="text-green-700 font-semibold border-b-2 border-green-700 pb-1" href="directorio.php">Ofertas</a>
         <a class="text-slate-600 hover:text-green-600 transition-colors" href="../directorioEmpresa/directorio.php">Empresas</a>
         <a class="text-slate-600 hover:text-green-600 transition-colors" href="../directorioEgresado/directorio.php">Egresados</a>
@@ -73,8 +73,6 @@ $total_vacantes  = $pdo->query("SELECT SUM(num_vacantes) FROM oferta_trabajo_of 
     </div>
     <nav class="flex-1 space-y-1 pr-4">
         <a class="flex items-center px-6 py-3 text-slate-500 hover:bg-slate-200 transition-all" href="../oferta/registrar.php"><span class="material-symbols-outlined mr-3">post_add</span> Registrar Oferta</a>
-        <a class="flex items-center px-6 py-3 text-slate-500 hover:bg-slate-200 transition-all" href="../egresados/registrar.php"><span class="material-symbols-outlined mr-3">school</span> Registrar Egresado</a>
-        <a class="flex items-center px-6 py-3 text-slate-500 hover:bg-slate-200 transition-all" href="../empresa/registrar.php"><span class="material-symbols-outlined mr-3">domain</span> Registrar Empresa</a>
         <a class="flex items-center px-6 py-3 text-green-700 bg-white rounded-r-lg shadow-sm font-bold" href="../verOfertaEmpleo/ver.php"><span class="material-symbols-outlined mr-3">description</span> Ver Postulaciones</a>
         <a class="flex items-center px-6 py-3 text-slate-500 hover:bg-slate-200 transition-all" href="../reportes/reportes.php"><span class="material-symbols-outlined mr-3">analytics</span> Reportes</a>
     </nav>

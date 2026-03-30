@@ -1,0 +1,51 @@
+/* =========================================
+   estilos.css — Labor Observatory Login
+   ========================================= */
+
+/* Fuente principal del cuerpo */
+body {
+    font-family: 'Public Sans', sans-serif;
+}
+
+/* Estilo para los íconos de Material Symbols */
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    display: inline-block;
+    line-height: 1;
+}
+
+/* Borde sutil para los campos del formulario */
+.ghost-border {
+    outline: 1px solid rgba(191, 202, 186, 0.2);
+}
+
+/* =========================================
+   Mensaje de error general (login fallido)
+   ========================================= */
+#mensaje-error {
+    background-color: #ffdad6;   /* color-error-container */
+    color: #ba1a1a;              /* color-error */
+    border: 1px solid #ba1a1a;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    text-align: center;
+    display: none;               /* oculto por defecto; JS lo muestra */
+}
+
+/* =========================================
+   Spinner de carga dentro del botón
+   ========================================= */
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: girar 0.7s linear infinite;
+    display: inline-block;
+}
+
+@keyframes girar {
+    to { transform: rotate(360deg); }
+}

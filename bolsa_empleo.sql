@@ -178,3 +178,20 @@ CREATE TABLE IF NOT EXISTS `postulacion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 COMMIT;
+
+-- ============================================================
+-- SOPORTE PARA USUARIOS DE TIPO EMPRESA
+-- Los usuarios empresa tienen cod_usuario = 'EMP-{cod_empresa}'
+-- y se asocian a un participante (el representante).
+-- ============================================================
+
+-- Ejemplo: crear un participante-representante y su usuario empresa
+-- (Solo para referencia; adaptar según los datos reales)
+--
+-- INSERT INTO participante (num_ident, nombre, apellido, email, telefono)
+-- VALUES ('900123456', 'Carlos', 'Representante', 'empresa@tech.co', '3001234567');
+--
+-- INSERT INTO usuario (cod_usuario, Participante_num_ident, num_usuario, password_hash, estado)
+-- VALUES ('EMP-TECH001', '900123456', 'empresa_tech', password_hash_aqui, b'1');
+-- (donde 'TECH001' es el cod_empresa en empresa_of)
+

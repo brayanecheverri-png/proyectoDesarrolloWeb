@@ -142,7 +142,6 @@ async function cargarParaEditar(id) {
         document.getElementById('cod_nivel_edu').value = o.cod_nivel_edu || '';
         document.getElementById('cod_idioma').value    = o.cod_idioma || '';
         document.getElementById('cod_ciudad').value    = o.cod_ciudad || '';
-        document.getElementById('cod_titulo').value    = o.cod_titulo || '';
 
         mostrarFormulario(true);
         document.getElementById('form-container').scrollIntoView({ behavior: 'smooth' });
@@ -204,7 +203,6 @@ function obtenerDatosFormulario() {
         cod_nivel_edu:        document.getElementById('cod_nivel_edu').value.trim(),
         cod_idioma:           document.getElementById('cod_idioma').value.trim(),
         cod_ciudad:           document.getElementById('cod_ciudad').value.trim(),
-        cod_titulo:           document.getElementById('cod_titulo').value.trim(),
     };
 }
 
@@ -226,8 +224,10 @@ function validarFormulario() {
 }
 
 function cancelarEdicion() {
+    const nitEmpresa = document.getElementById('nit_empresa').value;
     editandoId = null;
     document.getElementById('form-oferta').reset();
+    document.getElementById('nit_empresa').value = nitEmpresa;
     mostrarFormulario(false);
 }
 

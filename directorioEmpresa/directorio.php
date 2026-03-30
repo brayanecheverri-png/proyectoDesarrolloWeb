@@ -1,5 +1,10 @@
 <?php
+session_start();
+$nombre = htmlspecialchars($_SESSION['nombre'] ?? 'Estudiante');
+
 require_once '../conexion.php';
+
+$pdo = conectar();
 
 try {
     $pdo = conectar();
@@ -41,45 +46,36 @@ try {
 </head>
 <body class="bg-background text-on-background min-h-screen flex flex-col">
 
-    <nav class="bg-slate-50 dark:bg-slate-900 flex justify-between items-center w-full px-12 h-16 max-w-none fixed top-0 z-50">
-        <div class="text-xl font-bold tracking-tighter text-green-800 dark:text-green-500">Observatorio Laboral</div>
-        <div class="hidden md:flex items-center space-x-8">
-            <a class="text-slate-600 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-300 transition-colors font-public-sans text-sm tracking-tight" href="/inicio/index.html">Inicio</a>
-            <a class="text-slate-600 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-300 transition-colors font-public-sans text-sm tracking-tight" href="../directorioOfertas/directorio.php">Ofertas de Empleo</a>
-            <a class="text-green-700 dark:text-green-400 font-semibold border-b-2 border-green-700 dark:border-green-400 pb-1 font-public-sans text-sm tracking-tight" href="directorio.php">Empresas</a>
-            <a class="text-slate-600 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-300 transition-colors font-public-sans text-sm tracking-tight" href="../directorioEgresado/directorio.php">Egresados/Estudiantes</a>
-        </div>
-        <div class="flex items-center space-x-4">
-            <button class="text-slate-600 hover:text-green-700 transition-all duration-200 active:scale-95">
-                <span class="material-symbols-outlined">account_circle</span>
-            </button>
-            <button class="text-slate-600 hover:text-green-700 transition-all duration-200 active:scale-95">
-                <span class="material-symbols-outlined">logout</span>
-            </button>
-        </div>
+    <nav class="bg-white flex justify-between items-center w-full px-10 h-16 fixed top-0 z-50 border-b border-slate-100 shadow-sm">
+    <div class="text-xl font-bold tracking-tighter text-green-800">Observatorio Laboral</div>
+    <div class="hidden md:flex items-center gap-3 text-sm font-medium">
+        <span class="text-slate-500">Hola, <span class="font-semibold text-green-700"><?= $nombre ?></span></span>
+        <span class="text-slate-300">|</span>
+        <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-bold uppercase tracking-wide">Egresado</span>
+    </div>
+    <div class="flex items-center gap-3 text-green-700">
+        <a href="logout.php" title="Cerrar sesión">
+            <button class="material-symbols-outlined hover:bg-slate-100 transition-all p-2 rounded-full">logout</button>
+        </a>
+    </div>
     </nav>
 
-    <div class="flex flex-1 pt-16">
-        <aside class="bg-slate-100 dark:bg-slate-950 fixed left-0 top-16 bottom-0 flex flex-col py-6 h-screen w-64 border-r border-slate-200 dark:border-slate-800 hidden lg:flex">
-            <div class="px-6 mb-8">
-                <h2 class="text-green-700 dark:text-green-400 font-public-sans text-sm font-bold uppercase tracking-widest">Gestión</h2>
-                <p class="text-slate-500 text-xs">Portal del Observatorio</p>
-            </div>
-            <nav class="flex-1 space-y-1 pr-4">
-                <a class="flex items-center px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:pl-8 transition-all duration-300 font-public-sans text-sm font-medium" href="../oferta/registrar.php">
-                    <span class="material-symbols-outlined mr-3">post_add</span> Registrar Oferta
-                </a>
-                <a class="flex items-center px-6 py-3 text-green-700 dark:text-green-400 bg-white dark:bg-slate-900 rounded-r-lg shadow-sm font-bold font-public-sans text-sm" href="../empresa/registrar.php">
-                    <span class="material-symbols-outlined mr-3">domain</span> Directorio de Empresas
-                </a>
-                <a class="flex items-center px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:pl-8 transition-all duration-300 font-public-sans text-sm font-medium" href="../verOfertaEmpleo/ver.php">
-                    <span class="material-symbols-outlined mr-3">description</span> Ver Solicitudes
-                </a>
-                <a class="flex items-center px-6 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:pl-8 transition-all duration-300 font-public-sans text-sm font-medium" href="../reportes/reportes.php">
-                    <span class="material-symbols-outlined mr-3">analytics</span> Reportes
-                </a>
-            </nav>
-        </aside>
+    <aside class="fixed left-0 top-16 bottom-0 flex flex-col py-6 bg-white h-screen w-64 border-r border-slate-100 hidden lg:flex">
+    <div class="px-6 mb-6">
+        <h2 class="text-slate-800 font-bold text-lg">Mi Portal</h2>
+        <p class="text-slate-400 text-xs uppercase tracking-widest">Estudiante / Egresado</p>
+    </div>
+    <nav class="flex flex-col gap-1 pr-4 text-sm font-medium">
+        <a class="flex items-center gap-3 px-6 py-3 text-slate-600 hover:bg-slate-100 hover:pl-8 transition-all rounded-r-lg"
+           href="../directorioOfertas/directorio.php">
+            <span class="material-symbols-outlined">work</span> Directorio de Ofertas
+        </a>
+        <a class="flex items-center gap-3 px-6 py-3 text-slate-600 hover:bg-slate-100 hover:pl-8 transition-all rounded-r-lg"
+           href="directorio.php">
+            <span class="material-symbols-outlined">domain</span> Directorio de Empresas
+        </a>
+    </nav>
+    </aside>
 
         <main class="flex-1 lg:ml-64 p-12 bg-surface">
             <header class="mb-12 flex justify-between items-end">
@@ -87,16 +83,6 @@ try {
                     <span class="text-primary font-bold tracking-widest text-[0.65rem] uppercase mb-2 block">Archivo / Entidades</span>
                     <h1 class="text-4xl font-extrabold tracking-tighter text-on-surface">Directorio de Empresas</h1>
                     <p class="text-on-surface-variant mt-2 max-w-2xl font-body leading-relaxed">Registro integral de socios industriales y colaboradores corporativos dentro del ecosistema del Observatorio Laboral. Filtrado por impacto económico regional.</p>
-                </div>
-                <div class="flex gap-4">
-                    <form action="procesar_empresa.php" method="POST">
-                        <button type="submit" name="accion" value="agregar" class="bg-primary text-on-primary px-6 py-2.5 rounded-md text-sm font-semibold hover:bg-primary-container transition-all flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm">add</span> Agregar Empresa
-                        </button>
-                    </form>
-                    <button class="text-primary font-medium text-sm hover:underline flex items-center gap-1">
-                        <span class="material-symbols-outlined text-sm">download</span> Exportar PDF
-                    </button>
                 </div>
             </header>
 

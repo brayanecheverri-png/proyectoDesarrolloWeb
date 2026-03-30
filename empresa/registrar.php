@@ -4,6 +4,14 @@ $pdo = conectar();
 $ciudades = $pdo->query("SELECT cod_ciudad, nom_ciudad FROM ciudad ORDER BY nom_ciudad")->fetchAll();
 $success = isset($_GET["success"]);
 $error = $_GET["error"] ?? "";
+$errorMsg = match($error) {
+    'campos_requeridos'       => 'Por favor completa todos los campos obligatorios.',
+    'ya_registrada'           => 'Ya existe una empresa con ese NIT.',
+    'passwords_no_coinciden'  => 'Las contraseñas no coinciden. Intenta de nuevo.',
+    'usuario_existente'       => 'El nombre de usuario ya está en uso. Elige otro.',
+    'bd'                      => 'Error en la base de datos: ' . htmlspecialchars($_GET['msg'] ?? ''),
+    default                   => ''
+};
 ?>
 <!DOCTYPE html>
 <html class="light" lang="es">
@@ -64,6 +72,19 @@ $error = $_GET["error"] ?? "";
             </header>
 
             <div class="bg-surface-container-low rounded-xl overflow-hidden">
+
+                <?php if ($success): ?>
+                <div class="mx-10 mt-8 flex items-center gap-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg px-5 py-4 text-sm font-semibold">
+                    <span class="material-symbols-outlined text-emerald-600">check_circle</span>
+                    Empresa registrada exitosamente. Ya puede <a href="../index.html" class="underline font-bold">iniciar sesión</a>.
+                </div>
+                <?php elseif ($errorMsg): ?>
+                <div class="mx-10 mt-8 flex items-center gap-3 bg-red-50 border border-red-200 text-red-700 rounded-lg px-5 py-4 text-sm font-semibold">
+                    <span class="material-symbols-outlined text-red-500">error</span>
+                    <?= $errorMsg ?>
+                </div>
+                <?php endif; ?>
+
                 <form action="registro.php" method="POST" class="p-10 space-y-12">
                     <section>
                         <div class="flex items-baseline space-x-4 mb-8">
@@ -131,6 +152,36 @@ $error = $_GET["error"] ?? "";
                         </div>
                     </section>
 
+                    <section>
+                        <div class="flex items-baseline space-x-4 mb-8">
+                            <span class="text-2xl font-bold text-outline-variant">04</span>
+                            <h3 class="text-xl font-bold text-on-surface">Credenciales de Acceso</h3>
+                        </div>
+                        <p class="text-sm text-on-surface-variant mb-6">Estos datos le permitirán iniciar sesión en el portal como empresa.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                            <div class="space-y-2">
+                                <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider" for="num_ident">Cédula del Representante</label>
+                                <input name="num_ident" class="w-full h-12 px-4 bg-surface-container-lowest border border-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary-fixed-dim focus:border-transparent transition-all outline-none text-on-surface" id="num_ident" placeholder="Número de identificación" type="text" required/>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider" for="username">Nombre de Usuario</label>
+                                <input name="username" class="w-full h-12 px-4 bg-surface-container-lowest border border-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary-fixed-dim focus:border-transparent transition-all outline-none text-on-surface" id="username" placeholder="ej. empresa_tech" type="text" required/>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider" for="password">Contraseña</label>
+                                <input name="password" class="w-full h-12 px-4 bg-surface-container-lowest border border-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary-fixed-dim focus:border-transparent transition-all outline-none text-on-surface" id="password" placeholder="Mínimo 8 caracteres" type="password" required minlength="8"/>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider" for="password2">Confirmar Contraseña</label>
+                                <input name="password2" class="w-full h-12 px-4 bg-surface-container-lowest border border-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary-fixed-dim focus:border-transparent transition-all outline-none text-on-surface" id="password2" placeholder="Repetir contraseña" type="password" required minlength="8"/>
+                            </div>
+                        </div>
+                        <div id="msg-password" class="hidden mt-3 text-sm text-red-600 flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm">error</span>
+                            <span>Las contraseñas no coinciden.</span>
+                        </div>
+                    </section>
+
                     <div class="pt-8 border-t border-outline-variant/20 flex flex-col md:flex-row items-center justify-between gap-6">
                         <div class="flex items-center space-x-2 text-on-surface-variant italic text-sm">
                             <span class="material-symbols-outlined text-sm">info</span>
@@ -149,6 +200,21 @@ $error = $_GET["error"] ?? "";
             </footer>
         </div>
     </main>
+
+    <script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const p1  = document.getElementById('password').value;
+        const p2  = document.getElementById('password2').value;
+        const msg = document.getElementById('msg-password');
+        if (p1 !== p2) {
+            e.preventDefault();
+            msg.classList.remove('hidden');
+            document.getElementById('password2').focus();
+        } else {
+            msg.classList.add('hidden');
+        }
+    });
+    </script>
 
     <div class="fixed right-12 bottom-12 w-48 h-48 pointer-events-none opacity-10">
         <img class="w-full h-full object-cover rounded-full grayscale mix-blend-multiply" alt="mapa minimalista" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWM_LjNQjVrc8Us8-C3rdQQwQ1ub65syeBSDYTWQzrhp8cxgvHb4jo8LU24sxTegTy9PbzgNcQEVJ8T_-oHxoXzmYVmXcg3xN_tJ69aG_pr9NFXHp3968EdkmqcPDqoCbGT15_rsZUKT6xiavAF2uk7A1iFpFx9GGODZ9eVGKf1L5KbJkXHOdnP0hi9J3q2AwLm1ga_Hha-8Go-2bkMpHPPXvpPMxItZ6qyVHaR8L9gtOxfXlMqjWJe2U9O3eMNg3uLAuYbHKOGG0"/>

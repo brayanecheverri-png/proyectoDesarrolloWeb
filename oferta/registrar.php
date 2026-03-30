@@ -1,3 +1,12 @@
+<?php
+session_start();
+require_once '../conexion.php';
+$pdo          = conectar();
+$ciudades     = $pdo->query("SELECT cod_ciudad, nom_ciudad FROM ciudad ORDER BY nom_ciudad")->fetchAll();
+$niveles      = $pdo->query("SELECT cod_nivel_educativo, nom_nivel_educativo FROM nivel_educativo")->fetchAll();
+$idiomas      = $pdo->query("SELECT cod_idioma, nom_idioma FROM idioma")->fetchAll();
+$discapacidades = $pdo->query("SELECT cod_discapacidad, nom_discapacidad FROM discapacidad")->fetchAll();
+?>
 <!DOCTYPE html>
 <html class="light" lang="es">
 <head>
@@ -298,8 +307,9 @@
                                         NIT de Empresa <span class="text-error">*</span>
                                     </label>
                                     <input id="nit_empresa" name="nit_empresa" type="text"
-                                        placeholder="Ej. 0614-050199-101-4"
-                                        class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40"/>
+                                        value="<?= htmlspecialchars($_SESSION['cod_empresa'] ?? '') ?>"
+                                        readonly
+                                        class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface opacity-60 cursor-not-allowed"/>
                                 </div>
 
                                 <!-- Tipo de Contrato -->
@@ -326,51 +336,65 @@
                                 <!-- Nivel Educativo -->
                                 <div>
                                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="cod_nivel_edu">
-                                        Código Nivel Educativo
+                                        Nivel Educativo
                                     </label>
-                                    <input id="cod_nivel_edu" name="cod_nivel_edu" type="text"
-                                        placeholder="Ej. 3"
-                                        class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40"/>
+                                    <select id="cod_nivel_edu" name="cod_nivel_edu"
+                                        class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface">
+                                        <option value="">Seleccionar nivel...</option>
+                                        <?php foreach ($niveles as $n): ?>
+                                        <option value="<?= htmlspecialchars($n['cod_nivel_educativo']) ?>">
+                                            <?= htmlspecialchars($n['nom_nivel_educativo']) ?>
+                                        </option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
 
                                 <!-- Idioma -->
                                 <div>
                                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="cod_idioma">
-                                        Código de Idioma
+                                        Idioma Requerido
                                     </label>
-                                    <input id="cod_idioma" name="cod_idioma" type="text"
-                                        placeholder="Ej. 1"
-                                        class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40"/>
+                                    <select id="cod_idioma" name="cod_idioma"
+                                        class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface">
+                                        <option value="">Seleccionar idioma...</option>
+                                        <?php foreach ($idiomas as $i): ?>
+                                        <option value="<?= htmlspecialchars($i['cod_idioma']) ?>">
+                                            <?= htmlspecialchars($i['nom_idioma']) ?>
+                                        </option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
 
                                 <!-- Ciudad -->
                                 <div>
                                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="cod_ciudad">
-                                        Código de Ciudad
+                                        Ciudad
                                     </label>
-                                    <input id="cod_ciudad" name="cod_ciudad" type="text"
-                                        placeholder="Ej. SJ001"
-                                        class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40"/>
-                                </div>
-
-                                <!-- Título Profesional -->
-                                <div>
-                                    <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="cod_titulo">
-                                        Código de Título
-                                    </label>
-                                    <input id="cod_titulo" name="cod_titulo" type="text"
-                                        placeholder="Ej. TT001"
-                                        class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40"/>
+                                    <select id="cod_ciudad" name="cod_ciudad"
+                                        class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface">
+                                        <option value="">Seleccionar ciudad...</option>
+                                        <?php foreach ($ciudades as $c): ?>
+                                        <option value="<?= htmlspecialchars($c['cod_ciudad']) ?>">
+                                            <?= htmlspecialchars($c['nom_ciudad']) ?>
+                                        </option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
 
                                 <!-- Discapacidad -->
-                                <div class="col-span-2">
+                                <div>
                                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2" for="cod_discapacidad">
-                                        Código de Discapacidad (opcional)
+                                        Inclusión / Discapacidad (opcional)
                                     </label>
-                                    <input id="cod_discapacidad" name="cod_discapacidad" type="text"
-                                        placeholder="Ej. DC001"
-                                        class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40"/>
+                                    <select id="cod_discapacidad" name="cod_discapacidad"
+                                        class="w-full bg-surface-container-low border-0 rounded-lg p-4 text-sm text-on-surface">
+                                        <option value="">Sin requisito específico</option>
+                                        <?php foreach ($discapacidades as $d): ?>
+                                        <option value="<?= htmlspecialchars($d['cod_discapacidad']) ?>">
+                                            <?= htmlspecialchars($d['nom_discapacidad']) ?>
+                                        </option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
 
                             </div>

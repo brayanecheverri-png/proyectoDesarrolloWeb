@@ -1,5 +1,10 @@
 <?php
+session_start();
+$nombre = htmlspecialchars($_SESSION['nombre'] ?? 'Empresa');
+
 require_once '../conexion.php';
+
+$pdo = conectar();
 
 try {
     $pdo = conectar();
@@ -86,13 +91,13 @@ $estadoColor = [
 <!-- NAV -->
 <nav class="bg-white flex justify-between items-center w-full px-10 h-16 fixed top-0 z-50 border-b border-slate-100 shadow-sm">
     <div class="text-xl font-bold tracking-tighter text-green-800">Observatorio Laboral</div>
-    <div class="hidden md:flex items-center gap-8 text-sm font-medium">
-        <a class="text-slate-500 hover:text-green-600 transition-colors" href="../inicio/index.html">Inicio</a>
-        <a class="text-green-700 font-semibold border-b-2 border-green-700 pb-1" href="ver.php">Solicitudes</a>
-        <a class="text-slate-500 hover:text-green-600 transition-colors" href="../directorioEmpresa/directorio.php">Empresas</a>
+    <div class="hidden md:flex items-center gap-3 text-sm font-medium">
+        <span class="text-slate-500">Hola, <span class="font-semibold text-green-700"><?= $nombre ?></span></span>
+        <span class="text-slate-300">|</span>
+        <span class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full font-bold uppercase tracking-wide">Empresa</span>
     </div>
     <div class="flex items-center gap-3 text-green-700">
-        <a href="../index.html">
+        <a href="logout.php" title="Cerrar sesión">
             <button class="material-symbols-outlined hover:bg-slate-100 transition-all p-2 rounded-full">logout</button>
         </a>
     </div>
@@ -101,18 +106,21 @@ $estadoColor = [
 <!-- SIDEBAR -->
 <aside class="fixed left-0 top-16 bottom-0 flex flex-col py-6 bg-white h-screen w-64 border-r border-slate-100 hidden lg:flex">
     <div class="px-6 mb-6">
-        <h2 class="text-slate-800 font-bold text-lg">Gestión</h2>
-        <p class="text-slate-400 text-xs uppercase tracking-widest">Portal del Observatorio</p>
+        <h2 class="text-slate-800 font-bold text-lg">Gestión Empresa</h2>
+        <p class="text-slate-400 text-xs uppercase tracking-widest">Portal Empresarial</p>
     </div>
     <nav class="flex flex-col gap-1 pr-4 text-sm font-medium">
-        <a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-slate-100 hover:pl-8 transition-all rounded-r-lg" href="../oferta/registrar.php">
-            <span class="material-symbols-outlined">post_add</span> Registrar Oferta
+        <a class="flex items-center gap-3 px-6 py-3 text-slate-600 hover:bg-slate-100 hover:pl-8 transition-all rounded-r-lg"
+           href="../oferta/registrar.php">
+            <span class="material-symbols-outlined">school</span> Publicar Oferta Empleo
         </a>
-        <a class="flex items-center gap-3 px-6 py-3 text-green-700 bg-green-50 rounded-r-lg font-bold" href="#">
-            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">description</span> Ver Solicitudes
+        <a class="flex items-center gap-3 px-6 py-3 text-slate-600 hover:bg-slate-100 hover:pl-8 transition-all rounded-r-lg"
+           href="../directorioEgresado/directorio.php">
+            <span class="material-symbols-outlined">school</span> Directorio Egresados
         </a>
-        <a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-slate-100 hover:pl-8 transition-all rounded-r-lg" href="../reportes/reportes.php">
-            <span class="material-symbols-outlined">analytics</span> Reportes
+        <a class="flex items-center gap-3 px-6 py-3 text-slate-600 hover:bg-slate-100 hover:pl-8 transition-all rounded-r-lg"
+           href="ver.php">
+            <span class="material-symbols-outlined">description</span> Mis Postulaciones
         </a>
     </nav>
 </aside>
